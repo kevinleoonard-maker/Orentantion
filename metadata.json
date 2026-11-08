@@ -1,0 +1,6 @@
+{
+  "name": "10 Minuti di Informatica · Vallauri",
+  "description": "Esperienza interattiva per scoprire cosa c'è dietro il codice: giochi, bit, fisica computazionale, AI, crittografia e cloud con ispezione del codice in tempo reale.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

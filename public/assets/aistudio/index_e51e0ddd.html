@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>10 minuti di Informatica · Vallauri</title>
+  <meta name="description" content="Un'esperienza interattiva di 10 minuti: gioca, prova e guarda il codice che c'è dietro.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="glow" id="glow" aria-hidden="true"></div>
+
+<header class="topbar">
+  <div class="brand"><i>&lt;/&gt;</i> Orientamento · Informatica</div>
+  <nav class="chapnav" id="chapnav" aria-label="Capitoli"></nav>
+  <div class="modeswitch" id="modeswitch" role="group" aria-label="Modalità">
+    <button type="button" data-mode="manual" class="on">Manuale</button>
+    <button type="button" data-mode="auto">Automatico</button>
+  </div>
+  <div class="timeleft"><span class="tl-manual">Ancora circa <b id="timeleft">10</b> min</span><span class="tl-auto">Video · passo <b id="tl-auto">1</b>/11</span></div>
+  <div class="progress"><i id="progress"></i></div>
+</header>
+
+<main>
+
+<!-- ======================= HERO ======================= -->
+<section class="hero" id="inizio" data-chapter="Inizio" data-h="235">
+  <canvas id="bits" aria-hidden="true"></canvas>
+  <div class="sticker" style="--x:3%;--y:30%;--d:.9;--t:6s" aria-hidden="true"><span>const futuro = crea(idea);</span></div>
+  <div class="sticker big" style="--x:86%;--y:16%;--d:1.4;--t:8s" aria-hidden="true"><span>&lt;/&gt;</span></div>
+  <div class="sticker hide-s" style="--x:76%;--y:70%;--d:.7;--t:7s" aria-hidden="true"><span>while (impari) { … }</span></div>
+  <div class="sticker" style="--x:3%;--y:74%;--d:1.2;--t:9s" aria-hidden="true"><span>01001001 01010100</span></div>
+  <div class="hero-inner" id="hero-inner">
+    <div class="pill"><span></span> Esperienza di 10 minuti · scorri verso il basso</div>
+    <h1>Tutto quello che usi è <em>codice</em>. Guarda cosa c'è dietro.</h1>
+    <p class="lead">Niente slide: gioca, tocca, cambia. Ogni volta vedrai il codice vero che fa funzionare quello che hai davanti.</p>
+    <div class="typed" id="typed" aria-hidden="true"><span id="typed-text"></span><span class="caret"></span></div>
+  </div>
+  <a class="scrollhint" href="#gioca"><span class="mouse"></span>Scorri</a>
+</section>
+
+<div class="ribbon" aria-hidden="true">
+  <div class="row a" data-dir="1"><span>Gioca ✦ Codice ✦ Bit ✦ Intelligenza Artificiale ✦ Sicurezza ✦ Cloud ✦ </span><span>Gioca ✦ Codice ✦ Bit ✦ Intelligenza Artificiale ✦ Sicurezza ✦ Cloud ✦ </span></div>
+  <div class="row b" data-dir="-1"><span>Scrivi ✦ Prova ✦ Rompi ✦ Ripara ✦ Crea ✦ Ricomincia ✦ </span><span>Scrivi ✦ Prova ✦ Rompi ✦ Ripara ✦ Crea ✦ Ricomincia ✦ </span></div>
+</div>
+
+<!-- ======================= 1 · SNAKE ======================= -->
+<section class="chapter" id="gioca" data-chapter="Gioca" data-num="01" data-h="345">
+  <div class="wrap">
+    <p class="kicker reveal">Capitolo 1 · circa 2 minuti</p>
+    <h2 class="title reveal d1">Hai <span data-sec>30</span> secondi. <span data-verb>Gioca</span>.</h2>
+    <p class="lead reveal d2" id="g-lead">Premi le frecce (o W A S D) e mangia più cibo che puoi. Mentre giochi, qui accanto vedi in diretta ogni tasto che premi e quale parte del programma entra in azione.</p>
+
+    <div class="arcade reveal d2">
+      <div class="arcade-main">
+        <div class="hud"><span>Tempo <b id="g-time">30.0</b>s</span><span>Punti <b id="g-score">0</b></span></div>
+        <div class="timebar"><i id="g-timebar"></i></div>
+        <div class="screen">
+          <canvas id="snake" width="400" height="400"></canvas>
+          <div class="overlay" id="g-overlay">
+            <h3 id="g-title">Pronto?</h3>
+            <p id="g-msg">Il tempo parte al primo tasto. Dopo 30 secondi il gioco si ferma.</p>
+            <div class="row" id="g-actions"><button class="btn coral" id="g-start" type="button">Inizia</button></div>
+          </div>
+        </div>
+        <div class="dpad" aria-label="Controlli touch">
+          <button type="button" data-pad="ArrowUp" aria-label="Su">↑</button>
+          <button type="button" data-pad="ArrowLeft" aria-label="Sinistra">←</button>
+          <button type="button" data-pad="ArrowDown" aria-label="Giù">↓</button>
+          <button type="button" data-pad="ArrowRight" aria-label="Destra">→</button>
+        </div>
+      </div>
+
+      <aside class="arcade-side">
+        <h3>I tuoi tasti, in diretta</h3>
+        <div class="keys">
+          <div class="kgroup">
+            <div class="key" data-key="ArrowUp">↑</div><div class="key" data-key="ArrowLeft">←</div>
+            <div class="key" data-key="ArrowDown">↓</div><div class="key" data-key="ArrowRight">→</div>
+          </div>
+          <div class="kgroup">
+            <div class="key" data-key="w">W</div><div class="key" data-key="a">A</div>
+            <div class="key" data-key="s">S</div><div class="key" data-key="d">D</div>
+          </div>
+        </div>
+        <ul class="tape" id="g-tape" aria-live="off"><li class="empty">// Premi un tasto: l'evento comparirà qui</li></ul>
+        <h3>Le funzioni che il computer esegue</h3>
+        <ul class="fnlist" id="g-fns">
+          <li data-fn="onKeyDown"><code>onKeyDown()</code><b>0</b></li>
+          <li data-fn="step"><code>step()</code><b>0</b></li>
+          <li data-fn="eat"><code>eat()</code><b>0</b></li>
+          <li data-fn="gameOver"><code>gameOver()</code><b>0</b></li>
+        </ul>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 2 · CODICE ======================= -->
+<section class="chapter" id="codice" data-chapter="Codice" data-num="02" data-h="215">
+  <div class="wrap">
+    <p class="kicker reveal">Capitolo 2 · circa 1 minuto</p>
+    <h2 class="title reveal d1">Quello che hai giocato è fatto di queste righe.</h2>
+    <p class="lead reveal d2">Non è un'immagine: è il codice vero, preso dal gioco che hai appena usato. Il numero giallo dice quante volte ogni funzione è stata eseguita durante la tua partita.</p>
+
+    <div class="codegrid">
+      <article class="codecard span2 reveal" id="card-CONFIG">
+        <header><code>const CONFIG</code><span>le impostazioni</span></header>
+        <pre><code id="code-CONFIG"></code></pre>
+        <footer><b>In parole semplici:</b> sono le regole del gioco scritte in un posto solo. Cambiandole, cambia il gioco.</footer>
+      </article>
+      <article class="codecard reveal" id="card-onKeyDown">
+        <header><code>onKeyDown()</code><span class="runs" id="runs-onKeyDown">— volte</span></header>
+        <pre><code id="code-onKeyDown"></code></pre>
+        <footer><b>In parole semplici:</b> il tasto premuto diventa una direzione. Ma non puoi tornare indietro di colpo.</footer>
+      </article>
+      <article class="codecard reveal d1" id="card-step">
+        <header><code>step()</code><span class="runs" id="runs-step">— volte</span></header>
+        <pre><code id="code-step"></code></pre>
+        <footer><b>In parole semplici:</b> a ogni battito il serpente avanza di una casella e controlla cosa ha davanti.</footer>
+      </article>
+      <article class="codecard reveal" id="card-eat">
+        <header><code>eat()</code><span class="runs" id="runs-eat">— volte</span></header>
+        <pre><code id="code-eat"></code></pre>
+        <footer><b>In parole semplici:</b> hai mangiato: +10 punti e il cibo ricompare altrove.</footer>
+      </article>
+      <article class="codecard reveal d1" id="card-gameOver">
+        <header><code>gameOver()</code><span class="runs" id="runs-gameOver">— volte</span></header>
+        <pre><code id="code-gameOver"></code></pre>
+        <footer><b>In parole semplici:</b> ferma il gioco e mostra il risultato.</footer>
+      </article>
+    </div>
+
+    <div class="tweak reveal">
+      <h3>Ora tocca a te: cambia una regola e guarda il codice cambiare.</h3>
+      <label>speed (ms tra un passo e l'altro): <b id="tw-speed-v">120</b>
+        <input type="range" id="tw-speed" min="60" max="220" step="10" value="120">
+      </label>
+      <label>walls (muri mortali)
+        <span class="toggle" id="tw-walls"><button type="button" data-v="true" class="on">true</button><button type="button" data-v="false">false</button></span>
+      </label>
+      <label>color
+        <span class="swatches" id="tw-color">
+          <button type="button" class="on" style="background:#5B8CFF" data-v="#5B8CFF" aria-label="Blu"></button>
+          <button type="button" style="background:#1FB89C" data-v="#1FB89C" aria-label="Verde"></button>
+          <button type="button" style="background:#FFB547" data-v="#FFB547" aria-label="Giallo"></button>
+          <button type="button" style="background:#9B7BFF" data-v="#9B7BFF" aria-label="Lilla"></button>
+        </span>
+      </label>
+      <button class="btn coral" type="button" id="tw-replay">Rigioca con le tue regole</button>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 3 · BIT ======================= -->
+<section class="chapter" id="bit" data-chapter="Bit" data-num="03" data-h="165">
+  <div class="wrap">
+    <p class="kicker reveal">Capitolo 3 · circa 1 minuto</p>
+    <h2 class="title reveal d1">Sotto il codice, esistono solo 0 e 1.</h2>
+    <p class="lead reveal d2">Per un computer ogni lettera è un numero, e ogni numero è una fila di 8 interruttori. Scrivi il tuo nome, poi clicca sui bit per cambiare le lettere.</p>
+
+    <div class="bitlab reveal d2">
+      <label for="bin-input">Il tuo nome (max 8 lettere)</label>
+      <input id="bin-input" maxlength="8" value="Ciao" autocomplete="off" spellcheck="false">
+      <div class="byterows" id="bin-rows"></div>
+      <p class="bitnote" id="bin-note">Ogni riga è un byte: 8 bit. Quella lettera, per il computer, è solo un numero.</p>
+      <pre class="livecode"><code id="bin-code"></code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 4 · LABORATORIO ======================= -->
+<div class="ribbon" aria-hidden="true" style="rotate:2deg">
+  <div class="row a" data-dir="-1"><span>Particelle ✦ Intelligenza ✦ Password ✦ Server ✦ Editor ✦ </span><span>Particelle ✦ Intelligenza ✦ Password ✦ Server ✦ Editor ✦ </span></div>
+</div>
+<section class="chapter" id="lab" data-chapter="Laboratorio" data-num="04" data-h="270">
+  <div class="wrap">
+    <p class="kicker reveal">Capitolo 4 · circa 5 minuti</p>
+    <h2 class="title reveal d1">Cinque progetti. Ognuno con il suo codice accanto.</h2>
+    <p class="lead reveal d2">Provali, poi guarda il codice accanto: sono le funzioni vere che li fanno vivere. Il numero giallo conta quante volte vengono eseguite mentre li usi.</p>
+  </div>
+</section>
+
+<!-- Particelle -->
+<section class="project" id="p-particelle" data-h="345">
+  <div class="wrap">
+    <div class="phead reveal"><h3>Disegna con la fisica</h3><p>Muovi il mouse (o il dito) sul riquadro. Poi cambia le regole: la gravità, la dispersione, la durata. Guarda quali righe si riscrivono.</p></div>
+    <div class="demo reveal">
+      <div class="demo-h"><b>Prova: particelle</b>
+        <span class="seg" id="fx-presets">
+          <button type="button" data-p="fuoco">Fuoco</button>
+          <button type="button" data-p="acqua" class="on">Acqua</button>
+          <button type="button" data-p="esplosione">Esplosione</button>
+        </span>
+      </div>
+      <canvas id="fx" width="640" height="360"></canvas>
+      <div class="sliders">
+        <label>gravity <input type="range" data-k="gravity" min="-0.2" max="0.4" step="0.01"></label>
+        <label>spread <input type="range" data-k="spread" min="1" max="12" step="0.5"></label>
+        <label>life <input type="range" data-k="life" min="20" max="120" step="5"></label>
+        <label>hue <input type="range" data-k="hue" min="0" max="360" step="5"></label>
+      </div>
+    </div>
+    <div class="codepane reveal d1" id="fx-code"><span class="tag">Cosa c'è dietro</span></div>
+  </div>
+</section>
+
+<!-- AI -->
+<section class="project rev" id="p-ai" data-h="270">
+  <div class="wrap">
+    <div class="phead reveal"><h3>Insegna a una macchina</h3><p>Nessuno ha scritto regole. Metti esempi di due categorie e l'AI colora il territorio guardando i punti più vicini. Nel pannello del codice, i tuoi esempi diventano dati.</p></div>
+    <div class="demo reveal">
+      <div class="demo-h"><b>Prova: allena l'AI</b>
+        <span class="seg" id="ai-seg">
+          <button type="button" class="on" data-c="0"><i class="dot a"></i>Categoria A</button>
+          <button type="button" data-c="1"><i class="dot b"></i>Categoria B</button>
+        </span>
+      </div>
+      <canvas id="ai-canvas" width="480" height="300"></canvas>
+      <div class="demo-row">
+        <button class="btn ghost small" type="button" id="ai-demo">Carica esempio</button>
+        <button class="btn ghost small" type="button" id="ai-clear">Pulisci</button>
+      </div>
+      <p class="demo-msg" id="ai-msg">Clicca nel riquadro per aggiungere punti. Metti almeno un punto per categoria.</p>
+    </div>
+    <div class="codepane reveal d1" id="ai-code"><span class="tag">Cosa c'è dietro</span></div>
+  </div>
+</section>
+
+<!-- Password -->
+<section class="project" id="p-cyber" data-h="165">
+  <div class="wrap">
+    <div class="phead reveal"><h3>Quanto ci mette a scoprire la tua password?</h3><p>Scrivi una password finta. Il programma calcola le combinazioni possibili e stima il tempo di un attacco che prova 10 miliardi di tentativi al secondo.</p></div>
+    <div class="demo reveal">
+      <div class="demo-h"><b>Prova: password</b></div>
+      <input class="pw" id="pw" placeholder="Scrivi una password finta…" autocomplete="off" spellcheck="false" aria-label="Password di prova">
+      <div class="meter"><i id="pw-bar"></i></div>
+      <div class="crack" id="pw-time"><small>Tempo per indovinarla</small>—</div>
+      <ul class="checks" id="pw-checks">
+        <li data-k="len">12+ caratteri</li><li data-k="low">minuscole</li>
+        <li data-k="up">MAIUSCOLE</li><li data-k="num">numeri</li>
+        <li data-k="sym">simboli</li><li data-k="common">non è comune</li>
+      </ul>
+      <div class="demo-row">
+        <button class="btn ghost small" type="button" data-pw="123456">123456</button>
+        <button class="btn ghost small" type="button" data-pw="Ciao2010">Ciao2010</button>
+        <button class="btn ghost small" type="button" data-pw="Cavallo-Batteria-Luna-42">Cavallo-Batteria-Luna-42</button>
+      </div>
+      <p class="demo-msg">Non usare password vere: tutto resta nel tuo browser, ma è una buona abitudine.</p>
+    </div>
+    <div class="codepane reveal d1" id="cy-code"><span class="tag">Cosa c'è dietro</span></div>
+  </div>
+</section>
+
+<!-- Cloud -->
+<section class="project rev" id="p-cloud" data-h="35">
+  <div class="wrap">
+    <div class="phead reveal"><h3>Arriva un'ondata di visitatori</h3><p>Un solo server cade oltre i 500 visitatori. Con la regola giusta, i server si accendono da soli. Simula il picco e guarda la funzione che decide.</p></div>
+    <div class="demo reveal">
+      <div class="demo-h"><b>Prova: picco di traffico</b>
+        <span class="seg" id="cl-seg">
+          <button type="button" data-m="single">1 solo server</button>
+          <button type="button" class="on" data-m="cloud">Server automatici</button>
+        </span>
+      </div>
+      <div class="status"><span>Visitatori: <b id="cl-users">200</b></span><span id="cl-status" class="ok">Online</span></div>
+      <div class="servers" id="cl-servers"></div>
+      <input class="users" type="range" id="cl-range" min="0" max="5000" step="50" value="200" aria-label="Numero di visitatori">
+      <div class="demo-row"><button class="btn ghost small" type="button" id="cl-peak">Simula il picco</button></div>
+      <p class="demo-msg" id="cl-msg">Ogni server regge 500 visitatori.</p>
+    </div>
+    <div class="codepane reveal d1" id="cl-code"><span class="tag">Cosa c'è dietro</span></div>
+  </div>
+</section>
+
+<!-- Editor -->
+<section class="project" id="p-editor" data-h="215">
+  <div class="wrap">
+    <div class="phead reveal"><h3>Ora scrivi tu il codice</h3><p>A sinistra c'è una pagina web scritta in HTML, CSS e JavaScript. A destra la vedi vivere. Cambia qualcosa e guarda subito cosa succede.</p></div>
+    <div class="demo reveal" style="grid-column:1/-1">
+      <div class="demo-h"><b>Prova: modifica il codice</b>
+        <span class="demo-row" style="margin:0">
+          <button class="btn ghost small" type="button" id="sw-color">Cambia colore</button>
+          <button class="btn ghost small" type="button" id="sw-text">Cambia testo</button>
+          <button class="btn ghost small" type="button" id="sw-reset">Ripristina</button>
+        </span>
+      </div>
+      <div class="editor">
+        <textarea id="sw-code" spellcheck="false" aria-label="Codice HTML modificabile"></textarea>
+        <iframe id="sw-frame" title="Risultato" sandbox="allow-scripts"></iframe>
+      </div>
+      <p class="demo-msg" id="sw-msg">Clicca sul bottone nel risultato, poi prova a cambiare <b>#5B8CFF</b> con <b>tomato</b>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= FINALE ======================= -->
+<section class="chapter" id="finale" data-chapter="Tu" data-h="20">
+  <div class="wrap">
+    <p class="kicker reveal" style="justify-content:center">Fine</p>
+    <h2 class="title reveal d1">Dietro ogni cosa c'era del codice.</h2>
+    <p class="lead reveal d2">Un gioco, un disegno che si muove, un'AI, un controllo di sicurezza, dei server: tutto è partito da righe di testo come quelle che hai letto. Ecco cosa hai fatto tu.</p>
+
+    <div class="recap reveal" id="recap"></div>
+
+    <div class="cta reveal">
+      <button class="btn ghost" type="button" id="restart">Ricomincia</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script src="js/app.js"></script>
+<script src="js/snake.js"></script>
+<script src="js/lab.js"></script>
+<script src="js/director.js"></script>
+</body>
+</html>
