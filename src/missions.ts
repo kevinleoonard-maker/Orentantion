@@ -4,7 +4,8 @@ import { CODE } from './missionCode';
 export type MissionId = 'ai' | 'path' | 'vision' | 'network' | 'crypto' | 'cpu';
 
 // Unica fonte per hero, barra, schede e rivelazione finale.
-// `tech` resta censurato finché il visitatore non completa la prova (count >= threshold).
+// `tech` è sempre visibile nelle schede di "Una rotta, sei tappe"; solo nel debriefing resta coperto finché il
+// visitatore non decifra la prova (count >= threshold).
 // `reveal` e `code` si vedono solo dopo "Decifra": scritti per ragazzi di terza media (frasi corte, niente gergo
 // senza spiegazione). `code` è un riassunto in Python di come funziona la prova, in missionCode.ts.
 export const MISSIONS = [

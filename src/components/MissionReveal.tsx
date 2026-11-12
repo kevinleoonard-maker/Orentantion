@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Lock, Unlock, ArrowRight } from 'lucide-react';
 import type { Mission } from '../missions';
 import { sound } from '../utils/sound';
+import { CodePeek } from './CodePeek';
 
 const GLYPHS = '01#%&*<>/{}[]=+ABCDEF';
 const scramble = (text: string, keep: number) =>
@@ -39,39 +40,6 @@ export const ScrambleText: React.FC<{ text: string; active: boolean; className?:
     );
   }
   return <span className={className}>{out}</span>;
-};
-
-// Il codice della prova in poche righe (missionCode.ts). Un blocco scuro in mono; i commenti (dal primo #)
-// sono più chiari e opachi: sono quelli che spiegano cosa fa ogni pezzo. Su telefono scorre di lato.
-const CodePeek: React.FC<{ code: string }> = ({ code }) => {
-  const lines = code.split('\n');
-  return (
-    <div className="mt-7">
-      <p className="label">Sotto il cofano · la prova in poche righe</p>
-      <pre
-        tabIndex={0}
-        aria-label="Codice Python semplificato"
-        className="mt-3 overflow-x-auto rounded-[16px] bg-ink p-4 sm:p-5 font-mono text-[13px] sm:text-sm leading-[1.75] text-white"
-      >
-        <code>
-          {lines.map((line, i) => {
-            const at = line.indexOf('#');
-            return (
-              <React.Fragment key={i}>
-                {at < 0 ? line : line.slice(0, at)}
-                {at >= 0 && <span className="text-white/60">{line.slice(at)}</span>}
-                {i < lines.length - 1 && '\n'}
-              </React.Fragment>
-            );
-          })}
-        </code>
-      </pre>
-      <p className="mt-3 max-w-3xl text-[13px] leading-relaxed text-muted">
-        È Python semplificato: non è identico al codice di questo sito, ma l'idea è la stessa. Prova a leggerlo: i
-        commenti in grigio, quelli che iniziano con #, ti spiegano cosa fa ogni pezzo.
-      </p>
-    </div>
-  );
 };
 
 interface MissionRevealProps {

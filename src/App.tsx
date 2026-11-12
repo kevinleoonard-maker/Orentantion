@@ -7,7 +7,7 @@ import { PathfindingLab } from './components/exhibits/PathfindingLab';
 import { NetworkLab } from './components/exhibits/NetworkLab';
 import { VisionLab } from './components/exhibits/VisionLab';
 import { CryptoLab } from './components/labs/CryptoLab';
-import { MissionReveal, ScrambleText } from './components/MissionReveal';
+import { MissionReveal } from './components/MissionReveal';
 import { SessionRecap } from './components/SessionRecap';
 import { FlightPath } from './components/FlightPath';
 import { MISSIONS, type Mission, type MissionId } from './missions';
@@ -131,8 +131,8 @@ export default function App() {
                           Una rotta, sei tappe.
                         </h2>
                         <p className="max-w-sm text-[17px] text-muted">
-                          Il drone ti segue lungo la pagina. Il nome di quello che usi in ogni prova è coperto: si
-                          scopre solo dopo averlo usato.
+                          Il drone ti segue lungo la pagina. In ogni prova usi una tecnologia vera: il nome è scritto
+                          sulla scheda, e a fine prova scopri come funziona.
                         </p>
                       </div>
                       <div className="mt-10 grid gap-3 grid-cols-[repeat(auto-fit,minmax(240px,1fr))]">
@@ -149,7 +149,7 @@ export default function App() {
                             <span className="text-[24px] font-semibold leading-tight tracking-[-0.025em]">{c.title}</span>
                             <span className="text-[15px] leading-relaxed text-muted">{c.teaser}</span>
                             <span className="label mt-auto pt-2 normal-case tracking-normal">
-                              Tecnologia: <ScrambleText text={c.tech} active={revealed[c.id]} className="text-ink" />
+                              Tecnologia: <span className="text-ink">{c.tech}</span>
                             </span>
                           </a>
                         ))}
@@ -192,6 +192,10 @@ export default function App() {
           <div className="text-sm text-white/60">
             <p className="font-semibold text-white text-base tracking-[-0.025em]">Missione KS-01</p>
             <p>Open Day · Istituto Vallauri · Fossano (CN)</p>
+            <p className="mt-2">
+              Crediti: <span className="text-white">Kevin Saccato</span> ·{' '}
+              <span className="text-white">Emanuel Andru</span>
+            </p>
           </div>
           <div className="flex flex-col items-center">
             <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/50">Drone e scena 3D di</span>

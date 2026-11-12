@@ -11,6 +11,15 @@ export default defineConfig(() => {
         '@': path.resolve(__dirname, '.'),
       },
     },
+    build: {
+      // Due pagine: il sito (index.html) e la guida per chi presenta (speaker.html, indirizzo /speaker).
+      rolldownOptions: {
+        input: {
+          main: path.resolve(__dirname, 'index.html'),
+          speaker: path.resolve(__dirname, 'speaker.html'),
+        },
+      },
+    },
     server: {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
       // Do not modify—file watching is disabled to prevent flickering during agent edits.
