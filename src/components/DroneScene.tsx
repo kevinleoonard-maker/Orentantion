@@ -68,6 +68,8 @@ export default function DroneScene() {
                 lanes: document.querySelectorAll('[data-drone-lane]'),
                 landing: document.querySelector('[data-drone-landing]'),
               },
+              // il drone si prende e si sposta solo nella home page (lo hero), non lungo la rotta
+              home: anchor.closest('#top'),
               onTelemetry: publishTelemetry,
             });
           }, 0);

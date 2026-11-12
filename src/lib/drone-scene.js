@@ -81,7 +81,8 @@ export function loadDroneModel(buffer) {
  * Cosa fa:
  * - nello hero il drone sta sulla piazzola con la H, accende le eliche e decolla (vista frontale, in prospettiva);
  * - in volo resta sospeso, oscilla piano e su desktop si inclina verso il mouse;
- * - si può prendere con il mouse o con il dito e spostare: lasciato, scende un po' e resta lì finché non si scorre;
+ * - nella home page (`home`) si può prendere con il mouse o con il dito e spostare: lasciato, scende un po' e resta
+ *   lì finché non si scorre. Più in basso, lungo la rotta, non si può prendere;
  * - su desktop (>= 1100px e mouse), scorrendo, lascia la piazzola e segue la rotta tracciata dalla pagina:
  *   corridoio di destra; cambio di colonna, in cui la pagina scivola a sinistra di una schermata e il drone passa
  *   al corridoio di sinistra (sale ad arco, vira col muso nella direzione di volo, passa vicino a chi guarda);
@@ -97,11 +98,12 @@ export function loadDroneModel(buffer) {
  *   // anchor: il <div> vuoto nella colonna destra dello hero (larghezza max 420px, altezza 520px)
  *   // route: facoltativo, { lanes, landing }: le corsie libere accanto alle prove ([data-drone-lane]) e la zona
  *   //   della H del debriefing ([data-drone-landing]); elementi vuoti del layout, nascosti su telefono
+ *   // home: facoltativo, l'elemento della home page (lo hero): il drone si può prendere solo mentre occupa lo schermo
  *   // onTelemetry: facoltativo, chiamata a ogni fotogramma con lo stato del drone (decollo, quota, rotta, sagoma
  *   //   sullo schermo): la usa la strumentazione di volo (lib/telemetry.ts)
  *   // destroy(): da chiamare allo smontaggio del componente
  */
-export function createDroneScene({ canvas, anchor, model = null, route = null, onFirstFrame = null, onTelemetry = null }) {
+export function createDroneScene({ canvas, anchor, model = null, route = null, home = null, onFirstFrame = null, onTelemetry = null }) {
   // Funziona sia con three r149 (usato in reference/) sia con le versioni recenti (r152+).
   const modern = 'SRGBColorSpace' in THREE;
   if (!modern && THREE.ColorManagement) THREE.ColorManagement.legacyMode = false;
@@ -183,7 +185,10 @@ export function createDroneScene({ canvas, anchor, model = null, route = null, o
   const hit = { x: 0, y: 0, rx: 0, ry: 0 };
   const tele = {}; // riusato a ogni fotogramma per onTelemetry
   const rp = {}; // punto della rotta, riusato a ogni fotogramma
-  const onDrone = (x, y) => hit.rx > 0 && ((x - hit.x) / hit.rx) ** 2 + ((y - hit.y) / hit.ry) ** 2 <= 1;
+  // Si può prendere solo nella home page: finché `home` (lo hero) occupa più di metà schermo. Scorrendo oltre il
+  // drone segue la rotta e non si tocca più. Senza `home` si può prendere ovunque.
+  const inHome = () => !home || home.getBoundingClientRect().bottom > window.innerHeight * 0.5;
+  const onDrone = (x, y) => hit.rx > 0 && inHome() && ((x - hit.x) / hit.rx) ** 2 + ((y - hit.y) / hit.ry) ** 2 <= 1;
   const html = document.documentElement;
   let drag = null;   // { id, ox, oy, sx, sy, px, py, s, moved }
   let placed = null; // { x, y, s, sy, t, sink }: punto in cui è stato lasciato (piano z = 0)
