@@ -6,7 +6,7 @@ import { Cpu, Play, Pause, StepForward, RotateCcw, ArrowRight, Zap, CheckCircle2
 export const CPULab: React.FC<{ onActivity: () => void }> = ({ onActivity }) => {
   // Demo Programs
   const programSum: { name: string; ram: number[]; instrs: Instruction[]; desc: string } = {
-    name: 'Somma Semplice (15 + 25)',
+    name: 'Quota: 15 m + 25 m',
     ram: [
       0, 0, 0, 0, 0, 0, 0, 0,
       0, 0, 15, 25, 0, 0, 0, 0, // RAM[10]=15, RAM[11]=25
@@ -17,11 +17,11 @@ export const CPULab: React.FC<{ onActivity: () => void }> = ({ onActivity }) => 
       { op: 'STA', operand: 12 }, // RAM[12] = ACC (40)
       { op: 'HLT', operand: 0 },
     ],
-    desc: 'Carica 15 nell\'accumulatore, somma 25 con l\'ALU e memorizza il risultato 40 nella cella di memoria 12.',
+    desc: 'Il drone è a 15 metri e deve salire di altri 25. Il chip carica 15, somma 25 e scrive la nuova quota (40) nella cella 12.',
   };
 
   const programSub: { name: string; ram: number[]; instrs: Instruction[]; desc: string } = {
-    name: 'Sottrazione e Verifica (100 - 45)',
+    name: 'Batteria: 100% − 45%',
     ram: [
       0, 0, 0, 0, 0, 0, 0, 0,
       0, 0, 100, 45, 0, 0, 0, 0,
@@ -32,7 +32,7 @@ export const CPULab: React.FC<{ onActivity: () => void }> = ({ onActivity }) => 
       { op: 'STA', operand: 13 },
       { op: 'HLT', operand: 0 },
     ],
-    desc: 'Esegue una sottrazione a livello logico bit-a-bit nell\'ALU salvando 55 in RAM[13].',
+    desc: 'Batteria piena, il volo ne ha consumato il 45%. Il chip sottrae e salva quanto resta (55) nella cella 13.',
   };
 
   const [activeProg, setActiveProg] = useState(programSum);
@@ -88,13 +88,13 @@ export const CPULab: React.FC<{ onActivity: () => void }> = ({ onActivity }) => 
         <div>
           <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-amber-400 mb-1">
             <Cpu className="w-4 h-4 text-amber-400" />
-            <span>Esperimento 2 · Architettura Hardware di Von Neumann</span>
+            <span>Prova 06 · Il chip di bordo</span>
           </div>
           <h3 className="text-2xl font-bold text-white tracking-tight">
-            Dentro il Chip di Silicio: Il Ciclo Macchina
+            Rallenta il cervello del drone
           </h3>
           <p className="text-sm text-slate-300 max-w-2xl leading-relaxed mt-1">
-            Ogni smartphone e computer sul pianeta funziona eseguendo questo ciclo continuo di 3 fasi: <b>FETCH</b> (preleva istruzione), <b>DECODE</b> (decodifica) ed <b>EXECUTE</b> (calcola nell'ALU).
+            Il chip fa miliardi di passi al secondo. Qui va al rallentatore: premi <b>Passo singolo</b> e guarda i numeri viaggiare dalla memoria al calcolo e ritorno. Sempre gli stessi tre passi: <b>FETCH</b>, <b>DECODE</b>, <b>EXECUTE</b>.
           </p>
         </div>
 
@@ -108,7 +108,7 @@ export const CPULab: React.FC<{ onActivity: () => void }> = ({ onActivity }) => 
                 : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white'
             }`}
           >
-            Somma 15 + 25
+            Quota +25 m
           </button>
           <button
             onClick={() => handleSelectProgram(programSub)}
@@ -118,17 +118,20 @@ export const CPULab: React.FC<{ onActivity: () => void }> = ({ onActivity }) => 
                 : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white'
             }`}
           >
-            Sottrazione 100 - 45
+            Batteria −45%
           </button>
 
           <button
-            onClick={() => setIsRunning(!isRunning)}
+            onClick={() => {
+              setIsRunning(!isRunning);
+              onActivity();
+            }}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow ${
               isRunning ? 'bg-rose-500 text-white' : 'bg-amber-500 text-slate-950'
             }`}
           >
             {isRunning ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-            <span>{isRunning ? 'Stop' : 'Esegui Clock'}</span>
+            <span>{isRunning ? 'Stop' : 'Avvia'}</span>
           </button>
 
           <button
@@ -137,7 +140,7 @@ export const CPULab: React.FC<{ onActivity: () => void }> = ({ onActivity }) => 
             className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-200 text-xs font-bold hover:text-white disabled:opacity-40"
           >
             <StepForward className="w-3.5 h-3.5 text-amber-400" />
-            <span>Passo Singolo</span>
+            <span>Passo singolo</span>
           </button>
 
           <button
@@ -302,7 +305,7 @@ export const CPULab: React.FC<{ onActivity: () => void }> = ({ onActivity }) => 
           </div>
 
           <div className="p-3 rounded-lg bg-slate-950 border border-slate-800 text-[11px] text-slate-400 leading-relaxed">
-            <b className="text-slate-200">Cosa accade nel silicio:</b> I transistor aprono e chiudono cancelli logici 3 miliardi di volte al secondo (3 GHz). Questo è l'esatto principio di funzionamento di qualsiasi microprocessore Intel, AMD o Apple Silicon.
+            <b className="text-slate-200">A velocità reale:</b> il chip di un drone ripete questi tre passi centinaia di milioni di volte al secondo, per tenerlo dritto anche col vento.
           </div>
         </div>
       </div>

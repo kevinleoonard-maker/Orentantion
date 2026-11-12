@@ -1,0 +1,107 @@
+/* Etichetta di volo che segue il drone su desktop (components/FlightTag.tsx). Mono perché sono misure. */
+.tag {
+  display: none;
+}
+
+@media (min-width: 1100px) and (pointer: fine) {
+  .tag {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: var(--z-drone);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: max-content;
+    padding: 10px 12px 11px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--nav-bg);
+    box-shadow: var(--shadow-tag);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.35;
+    letter-spacing: var(--tracking-mono-sm);
+    text-transform: uppercase;
+    color: var(--ink);
+    pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+    will-change: transform, opacity;
+  }
+}
+
+/* linea fra etichetta e drone: parte dal bordo dell'etichetta verso il drone */
+.leader {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 18px;
+  margin-left: -0.5px;
+  background: var(--muted);
+  opacity: 0.5;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  color: var(--muted);
+}
+
+.rec {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.recDot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: var(--rec);
+}
+
+/* a terra la registrazione è ferma */
+.tag[data-state='landed'] .recDot {
+  background: var(--muted);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tag:not([data-state='landed']) .recDot {
+    animation: rec 1.2s steps(2, jump-none) infinite;
+  }
+}
+
+@keyframes rec {
+  to {
+    opacity: 0.2;
+  }
+}
+
+.state {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: var(--tracking-snug);
+  text-transform: none;
+}
+
+.grid {
+  display: grid;
+  /* colonne dei valori larghe quanto il valore più lungo ("1.25 km", "12.4 m/s"): l'etichetta non cambia misura */
+  grid-template-columns: auto 8ch auto 9ch;
+  gap: 2px 10px;
+}
+
+.key {
+  color: var(--muted);
+}
+
+.value {
+  text-align: right;
+  white-space: nowrap;
+  text-transform: none; /* unità di misura in minuscolo: m, m/s, km */
+}

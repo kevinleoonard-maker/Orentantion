@@ -4,8 +4,8 @@ import { sha256, analyzePassword } from '../../utils/crypto';
 import { sound } from '../../utils/sound';
 
 export const CryptoLab: React.FC<{ onAction: () => void }> = ({ onAction }) => {
-  const [password, setPassword] = useState<string>('Vallauri2026!');
-  const [referencePassword, setReferencePassword] = useState<string>('Vallauri2026');
+  const [password, setPassword] = useState<string>('KS-01drone!');
+  const [referencePassword, setReferencePassword] = useState<string>('KS-01drone');
 
   const analysis = useMemo(() => analyzePassword(password), [password]);
   const currentHash = useMemo(() => sha256(password), [password]);
@@ -40,15 +40,15 @@ export const CryptoLab: React.FC<{ onAction: () => void }> = ({ onAction }) => {
   return (
     <div className="rounded-2xl border border-slate-800 bg-slate-950 p-6 shadow-xl">
       <div className="mb-6">
-        <div className="flex items-center gap-2 text-xs font-mono text-cyan-400 mb-1">
+        <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-cyan-400 mb-1">
           <KeyRound className="w-4 h-4" />
-          <span>Esperimento 3 · Crittografia, Hashing &amp; Cyber Security</span>
+          <span>Prova 05 · Antifurto</span>
         </div>
-        <h3 className="text-xl font-bold text-white">
-          Come Viaggiano Protette le Tue Password: SHA-256
+        <h3 className="text-2xl font-bold text-white tracking-tight">
+          Scegli la chiave del telecomando
         </h3>
-        <p className="text-sm text-slate-400">
-          I siti web sicuri non salvano mai la tua password in chiaro: calcolano un'impronta crittografica unidirezionale (Hash a 256 bit).
+        <p className="text-sm text-slate-300 max-w-2xl leading-relaxed mt-1">
+          Un pirata vuole prendersi il drone provando tutte le chiavi possibili, una dopo l'altra. Scrivi la tua e guarda quanto ci metterebbe. Poi cambia una sola lettera e osserva cosa succede all'impronta.
         </p>
       </div>
 
@@ -58,7 +58,7 @@ export const CryptoLab: React.FC<{ onAction: () => void }> = ({ onAction }) => {
           <div className="space-y-2">
             <div className="flex justify-between items-center text-xs">
               <label htmlFor="crypto-pw-input" className="font-semibold uppercase tracking-wider text-slate-300">
-                Password di Prova (nessun dato esce dal browser):
+                Chiave del drone (non esce da questa pagina):
               </label>
               <span className="text-slate-500 font-mono">{password.length} caratteri</span>
             </div>
@@ -136,7 +136,7 @@ export const CryptoLab: React.FC<{ onAction: () => void }> = ({ onAction }) => {
               ) : (
                 <ShieldCheck className="w-5 h-5 text-emerald-400" />
               )}
-              <span className="text-sm font-bold text-white">Stima Attacco a Forza Bruta</span>
+              <span className="text-sm font-bold text-white">Quanto ci mette il pirata?</span>
             </div>
             <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-slate-950 text-cyan-400 border border-slate-800">
               {analysis.entropyBits} bit di entropia

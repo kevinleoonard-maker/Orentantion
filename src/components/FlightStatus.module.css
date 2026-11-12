@@ -1,0 +1,85 @@
+/* riga del decollo sotto la piazzola, in mono: è una lettura della strumentazione */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--tracking-mono);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* nelle colonne strette la riga va a capo solo fra un blocco e l'altro (stato · quota · coordinate) */
+.part {
+  white-space: nowrap;
+}
+
+/* quota a larghezza fissa: la riga non si sposta mentre i numeri cambiano */
+.num {
+  display: inline-block;
+  min-width: 6ch;
+  text-align: right;
+  text-transform: none; /* metri in minuscolo */
+}
+
+.dot {
+  position: relative;
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: var(--green);
+  transition: background-color 0.2s ease;
+}
+
+/* in volo: un'onda parte dal pallino, come il segnale del drone */
+.dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--green);
+  opacity: 0;
+}
+
+.status[data-state='off'] .dot {
+  background: var(--muted);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .status[data-state='armed'] .dot {
+    animation: blink 0.4s steps(2, jump-none) infinite;
+  }
+
+  .status[data-state='flight'] .dot::after {
+    animation: ping 1.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  }
+}
+
+@keyframes blink {
+  to {
+    opacity: 0.25;
+  }
+}
+
+@keyframes ping {
+  from {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(3.2);
+  }
+}
+
+/* la riga resta su una riga anche a 360px */
+@media (max-width: 760px) {
+  .status {
+    font-size: clamp(10px, 2.6vw, 11px);
+    letter-spacing: 0.03em;
+  }
+}

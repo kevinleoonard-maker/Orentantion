@@ -82,8 +82,9 @@ export const FlappyAILab: React.FC<{ onActivity: () => void }> = ({ onActivity }
     }
   }, [onActivity]);
 
-  // Keyboard handler for human play
+  // Tastiera solo mentre si pilota: altrimenti spazio e freccia devono continuare a scorrere la pagina
   useEffect(() => {
+    if (!humanMode) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.code === 'Space' || e.key === 'ArrowUp') {
         e.preventDefault();
@@ -92,7 +93,19 @@ export const FlappyAILab: React.FC<{ onActivity: () => void }> = ({ onActivity }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [handleHumanJump]);
+  }, [handleHumanJump, humanMode]);
+
+  // La simulazione si ferma quando lo schermo della prova è fuori dalla finestra (la pagina ha tutte le prove)
+  const onScreenRef = useRef<boolean>(true);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const io = new IntersectionObserver(([e]) => {
+      onScreenRef.current = e.isIntersecting;
+    });
+    io.observe(canvas);
+    return () => io.disconnect();
+  }, []);
 
   // Simulation Game Loop
   useEffect(() => {
@@ -100,6 +113,10 @@ export const FlappyAILab: React.FC<{ onActivity: () => void }> = ({ onActivity }
     let animId: number;
 
     const gameLoop = () => {
+      if (!onScreenRef.current) {
+        animId = requestAnimationFrame(gameLoop);
+        return;
+      }
       if (!isPaused) {
         for (let step = 0; step < speedMultiplier; step++) {
           frameCountRef.current++;
@@ -253,77 +270,86 @@ export const FlappyAILab: React.FC<{ onActivity: () => void }> = ({ onActivity }
             ctx.stroke();
           }
 
-          // Draw Pipes
+          // Ostacoli: in alto zona vietata al volo, in basso un palazzo
           for (const pipe of pipesRef.current) {
             const topHeight = pipe.gapY - pipe.gapHeight / 2;
             const bottomY = pipe.gapY + pipe.gapHeight / 2;
 
-            // Top pipe
+            ctx.fillStyle = 'rgba(244, 63, 94, 0.1)';
+            ctx.fillRect(pipe.x, 0, pipe.width, topHeight);
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(pipe.x, 0, pipe.width, topHeight);
+            ctx.clip();
+            ctx.strokeStyle = 'rgba(244, 63, 94, 0.35)';
+            ctx.lineWidth = 6;
+            for (let s = -pipe.width; s < topHeight; s += 16) {
+              ctx.beginPath();
+              ctx.moveTo(pipe.x, s);
+              ctx.lineTo(pipe.x + pipe.width, s + pipe.width);
+              ctx.stroke();
+            }
+            ctx.restore();
+            ctx.strokeStyle = '#f43f5e';
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(pipe.x, -2, pipe.width, topHeight + 2);
+
             ctx.fillStyle = '#1e293b';
             ctx.strokeStyle = '#38bdf8';
-            ctx.lineWidth = 1.5;
-            ctx.fillRect(pipe.x, 0, pipe.width, topHeight);
-            ctx.strokeRect(pipe.x, 0, pipe.width, topHeight);
-
-            // Bottom pipe
             ctx.fillRect(pipe.x, bottomY, pipe.width, height - bottomY);
-            ctx.strokeRect(pipe.x, bottomY, pipe.width, height - bottomY);
-
-            // Pipe Cap highlight
-            ctx.fillStyle = '#0284c7';
-            ctx.fillRect(pipe.x - 3, topHeight - 12, pipe.width + 6, 12);
-            ctx.fillRect(pipe.x - 3, bottomY, pipe.width + 6, 12);
+            ctx.strokeRect(pipe.x, bottomY, pipe.width, height - bottomY + 2);
+            for (let j = 0; bottomY + 10 + j * 14 < height - 6; j++) {
+              for (let i = 0; i < 3; i++) {
+                const lit = (i * 7 + j * 3 + pipe.gapY) % 5 === 0;
+                ctx.fillStyle = lit ? 'rgba(251, 191, 36, 0.75)' : 'rgba(148, 163, 184, 0.15)';
+                ctx.fillRect(pipe.x + 7 + i * 12, bottomY + 10 + j * 14, 6, 7);
+              }
+            }
           }
 
-          // Draw AI Flock
+          const drawDrone = (color: string, glow: boolean, spin: number) => {
+            ctx.shadowColor = glow ? color : 'transparent';
+            ctx.shadowBlur = glow ? 10 : 0;
+            ctx.strokeStyle = color;
+            ctx.fillStyle = color;
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.moveTo(-13, -4);
+            ctx.lineTo(13, -4);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.roundRect(-7, -6, 14, 10, 3);
+            ctx.fill();
+            const w = 3 + Math.abs(Math.sin(spin)) * 7;
+            ctx.beginPath();
+            ctx.ellipse(-13, -8, w, 1.8, 0, 0, Math.PI * 2);
+            ctx.ellipse(13, -8, w, 1.8, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = '#0a0f1d';
+            ctx.beginPath();
+            ctx.arc(0, 0, 2.5, 0, Math.PI * 2);
+            ctx.fill();
+          };
+
           populationRef.current.forEach((agent, idx) => {
             if (!agent.alive) return;
-
             ctx.save();
             ctx.translate(80, agent.y);
-
-            // Bird Body
-            const isElite = idx === 0;
-            ctx.fillStyle = isElite ? '#38bdf8' : 'rgba(56, 189, 248, 0.4)';
-            ctx.shadowColor = isElite ? '#38bdf8' : 'transparent';
-            ctx.shadowBlur = isElite ? 10 : 0;
-
-            ctx.beginPath();
-            ctx.arc(0, 0, 11, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Eye & Beak
-            ctx.fillStyle = '#ffffff';
-            ctx.beginPath();
-            ctx.arc(4, -3, 3, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.fillStyle = '#f59e0b';
-            ctx.beginPath();
-            ctx.moveTo(8, -1);
-            ctx.lineTo(15, 2);
-            ctx.lineTo(8, 5);
-            ctx.fill();
-
+            ctx.rotate(Math.max(-0.4, Math.min(0.4, agent.vy * 0.05)));
+            ctx.globalAlpha = idx === 0 ? 1 : 0.4;
+            drawDrone('#38bdf8', idx === 0, frameCountRef.current * 0.9 + idx);
             ctx.restore();
           });
 
-          // Draw Human Player (if active)
           if (humanMode && humanRef.current.alive) {
             ctx.save();
             ctx.translate(80, humanRef.current.y);
+            ctx.scale(1.15, 1.15);
+            drawDrone('#10b981', true, frameCountRef.current * 0.9);
             ctx.fillStyle = '#10b981';
-            ctx.shadowColor = '#10b981';
-            ctx.shadowBlur = 12;
-
-            ctx.beginPath();
-            ctx.arc(0, 0, 13, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.fillStyle = '#ffffff';
-            ctx.font = '10px monospace';
-            ctx.fillText('TU', -7, 3);
-
+            ctx.font = 'bold 9px monospace';
+            ctx.fillText('TU', -6, -14);
             ctx.restore();
           }
 
@@ -366,13 +392,13 @@ export const FlappyAILab: React.FC<{ onActivity: () => void }> = ({ onActivity }
         <div>
           <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-sky-400 mb-1">
             <Brain className="w-4 h-4 text-sky-400" />
-            <span>Esperimento 1 · Neuroevoluzione &amp; Algoritmi Genetici</span>
+            <span>Prova 01 · Addestramento al volo</span>
           </div>
           <h3 className="text-2xl font-bold text-white tracking-tight">
-            La Macchina che Impara a Giocare da Sola
+            Venti droni, zero istruzioni
           </h3>
           <p className="text-sm text-slate-300 max-w-2xl leading-relaxed mt-1">
-            Nessun programmatore ha scritto regole per saltare: ogni creatura possiede una rete neurale casuale. I migliori sopravvivono, si riproducono e migliorano a ogni generazione tramite mutazione genetica.
+            Nessuno ha spiegato loro come si vola. Si schiantano contro palazzi e zone vietate, i migliori sopravvivono e passano il loro "istinto" ai prossimi. Quante generazioni servono prima che smettano di cadere?
           </p>
         </div>
 
@@ -411,7 +437,7 @@ export const FlappyAILab: React.FC<{ onActivity: () => void }> = ({ onActivity }
           <button
             onClick={handleRestart}
             className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white"
-            aria-label="Ricomincia da generazione 1"
+            aria-label="Ricomincia con droni nuovi"
           >
             <RotateCcw className="w-4 h-4" />
           </button>
@@ -428,7 +454,7 @@ export const FlappyAILab: React.FC<{ onActivity: () => void }> = ({ onActivity }
               <span className="font-bold text-amber-400 tabular-nums">#{generation}</span>
             </div>
             <div className="flex items-center gap-3">
-              <span className="text-slate-400">VIVI:</span>
+              <span className="text-slate-400">IN VOLO:</span>
               <span className="font-bold text-sky-400 tabular-nums">{aliveCount}/20</span>
             </div>
             <div className="flex items-center gap-3">
@@ -453,7 +479,7 @@ export const FlappyAILab: React.FC<{ onActivity: () => void }> = ({ onActivity }
             {/* Human mode overlay banner */}
             {humanMode && (
               <div className="absolute top-3 left-3 bg-emerald-950/80 border border-emerald-500/50 backdrop-blur px-3 py-1 rounded-lg text-xs font-mono text-emerald-300">
-                {humanAlive ? '🟢 Tu sei in gara! Clicca o premi SPAZIO per saltare' : '🔴 Sei caduto! L\'AI continua la corsa'}
+                {humanAlive ? '🟢 Stai pilotando! Clicca o premi SPAZIO per dare gas' : '🔴 Ti sei schiantato. I droni continuano da soli'}
               </div>
             )}
           </div>
@@ -475,7 +501,7 @@ export const FlappyAILab: React.FC<{ onActivity: () => void }> = ({ onActivity }
                 }`}
               >
                 <User className="w-3.5 h-3.5" />
-                <span>{humanMode ? 'Modalità Umano Attiva' : 'Sfida tu l\'AI (Umano vs Robot)'}</span>
+                <span>{humanMode ? 'Stai pilotando tu' : 'Pilota tu contro i droni'}</span>
               </button>
             </div>
 
@@ -503,11 +529,11 @@ export const FlappyAILab: React.FC<{ onActivity: () => void }> = ({ onActivity }
             <div className="flex items-center gap-2">
               <Brain className="w-4 h-4 text-sky-400" />
               <span className="text-xs font-mono font-bold text-white uppercase tracking-wider">
-                Cervello Neurale del Leader
+                Cervello del drone migliore
               </span>
             </div>
             <span className={`text-[10px] font-mono px-2 py-0.5 rounded ${brainTelemetry.jumped ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' : 'bg-slate-950 text-slate-500'}`}>
-              {brainTelemetry.jumped ? 'IMPULSO SALTO: ATTIVO' : 'IMPULSO: IN ATTESA'}
+              {brainTelemetry.jumped ? 'MOTORI: SPINTA' : 'MOTORI: MINIMO'}
             </span>
           </div>
 
@@ -564,7 +590,7 @@ export const FlappyAILab: React.FC<{ onActivity: () => void }> = ({ onActivity }
 
             {/* 1 Output Neuron */}
             <div className="flex flex-col gap-2.5 items-center">
-              <span className="text-[10px] text-slate-500 uppercase tracking-widest">Salto</span>
+              <span className="text-[10px] text-slate-500 uppercase tracking-widest">Spinta</span>
               <div
                 className={`w-9 h-9 rounded-full border-2 flex items-center justify-center font-bold text-xs transition-all shadow-lg ${
                   brainTelemetry.output > 0.5
@@ -581,10 +607,10 @@ export const FlappyAILab: React.FC<{ onActivity: () => void }> = ({ onActivity }
           <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 text-xs text-slate-300 space-y-2 leading-relaxed">
             <div className="flex items-center gap-1.5 text-sky-400 font-bold">
               <Zap className="w-3.5 h-3.5" />
-              <span>Come impara l'algoritmo genetico:</span>
+              <span>Come fa a imparare?</span>
             </div>
             <p className="text-slate-400 text-[11px]">
-              La prima generazione si schianta subito. L'algoritmo seleziona i cervelli che sono andati più lontano, applica un pizzico di mutazione genetica e crea i figli. Dopo 3–6 generazioni scoprirai che i robot superano i tubi con precisione sovrumana!
+              La prima generazione cade quasi subito. Teniamo il drone arrivato più lontano, copiamo il suo cervello con qualche piccolo errore a caso e ripartiamo. Dopo 3–6 generazioni passano tra i palazzi meglio di qualsiasi pilota.
             </p>
           </div>
         </div>

@@ -10,7 +10,7 @@ export const VisionLab: React.FC<{ onActivity: () => void }> = ({ onActivity }) 
   const [activeKernel, setActiveKernel] = useState<KernelType>('sobel');
   const isPaintingRef = useRef<boolean>(false);
 
-  // Initialize input canvas with test pattern (geometric square, circle, line)
+  // Ripresa dall'alto di default: casa, strada e piazzola di atterraggio
   const drawDefaultPattern = () => {
     const canvas = canvasInputRef.current;
     if (!canvas) return;
@@ -20,19 +20,30 @@ export const VisionLab: React.FC<{ onActivity: () => void }> = ({ onActivity }) 
     ctx.fillStyle = '#05070c';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // High contrast shapes
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(30, 30, 60, 60);
-
-    ctx.beginPath();
-    ctx.arc(150, 60, 35, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.lineWidth = 10;
     ctx.strokeStyle = '#ffffff';
+    ctx.fillStyle = '#ffffff';
+    ctx.lineWidth = 12;
     ctx.beginPath();
-    ctx.moveTo(30, 130);
-    ctx.lineTo(190, 130);
+    ctx.moveTo(0, 145);
+    ctx.lineTo(220, 112);
+    ctx.stroke();
+
+    ctx.fillRect(22, 22, 64, 48);
+    ctx.fillStyle = '#05070c';
+    ctx.fillRect(52, 22, 4, 48);
+
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.arc(160, 55, 32, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.lineWidth = 7;
+    ctx.beginPath();
+    ctx.moveTo(149, 40);
+    ctx.lineTo(149, 70);
+    ctx.moveTo(171, 40);
+    ctx.lineTo(171, 70);
+    ctx.moveTo(149, 55);
+    ctx.lineTo(171, 55);
     ctx.stroke();
 
     applyFilter();
@@ -134,13 +145,13 @@ export const VisionLab: React.FC<{ onActivity: () => void }> = ({ onActivity }) 
         <div>
           <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-rose-400 mb-1">
             <Eye className="w-4 h-4 text-rose-400" />
-            <span>Esperimento 5 · Computer Vision &amp; Matematica Matriciale</span>
+            <span>Prova 03 · La telecamera di bordo</span>
           </div>
           <h3 className="text-2xl font-bold text-white tracking-tight">
-            Come "Vede" una Telecamera Intelligente: Matrici di Convoluzione
+            Cosa vede davvero il drone?
           </h3>
           <p className="text-sm text-slate-300 max-w-2xl leading-relaxed mt-1">
-            Disegna a mano libera nel riquadro di sinistra. A destra vedrai la trasformazione in tempo reale calcolata moltiplicando ogni pixel per una matrice 3×3 (il principio alla base della guida autonoma di Tesla).
+            A sinistra la ripresa dall'alto: disegnaci sopra quello che vuoi. A destra quello che ci capisce il drone, pixel per pixel, facendo scorrere 9 numeri su tutta l'immagine. Cambia i 9 numeri e cambia il modo di vedere.
           </p>
         </div>
 
@@ -166,7 +177,7 @@ export const VisionLab: React.FC<{ onActivity: () => void }> = ({ onActivity }) 
           <button
             onClick={drawDefaultPattern}
             className="p-1.5 rounded-lg text-slate-400 hover:text-white"
-            title="Ripristina forme geometriche"
+            title="Ripristina la ripresa"
           >
             <RotateCcw className="w-4 h-4" />
           </button>
@@ -179,7 +190,7 @@ export const VisionLab: React.FC<{ onActivity: () => void }> = ({ onActivity }) 
           {/* Input Canvas */}
           <div className="flex flex-col items-center">
             <div className="w-full flex justify-between items-center px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-t-xl text-xs font-mono text-slate-300">
-              <span>INPUT: DISEGNA QUI</span>
+              <span>TELECAMERA: DISEGNA QUI</span>
               <PenTool className="w-3.5 h-3.5 text-slate-400" />
             </div>
             <div className="w-full aspect-[4/3] rounded-b-xl border border-slate-800 bg-[#05070c] overflow-hidden">
@@ -198,7 +209,7 @@ export const VisionLab: React.FC<{ onActivity: () => void }> = ({ onActivity }) 
           {/* Output Canvas */}
           <div className="flex flex-col items-center">
             <div className="w-full flex justify-between items-center px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-t-xl text-xs font-mono text-rose-400 font-bold">
-              <span>OUTPUT: {kernelInfo.name.toUpperCase()}</span>
+              <span>IL DRONE VEDE: {kernelInfo.name.split(' ')[0].toUpperCase()}</span>
               <Eye className="w-3.5 h-3.5" />
             </div>
             <div className="w-full aspect-[4/3] rounded-b-xl border border-slate-800 bg-[#05070c] overflow-hidden shadow-xl">
@@ -242,7 +253,7 @@ export const VisionLab: React.FC<{ onActivity: () => void }> = ({ onActivity }) 
           </div>
 
           <div className="p-3 rounded-lg bg-slate-950/60 border border-slate-800 text-[11px] text-slate-400 leading-relaxed">
-            <b className="text-slate-200">Applicazione reale:</b> Le reti neurali convoluzionali (CNN) fanno passare migliaia di questi kernel in parallelo per riconoscere volti, cartelli stradali e tumori radiologici.
+            <b className="text-slate-200">Perché funziona:</b> dove i numeri vicini cambiano di colpo c'è un bordo. Mettendo in fila migliaia di griglie come questa, una macchina arriva a riconoscere facce, cartelli e ostacoli.
           </div>
         </div>
       </div>

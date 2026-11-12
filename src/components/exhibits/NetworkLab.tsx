@@ -4,7 +4,7 @@ import { sound } from '../../utils/sound';
 import { Network, Send, ShieldAlert, CheckCircle2, RotateCcw, Radio } from 'lucide-react';
 
 export const NetworkLab: React.FC<{ onActivity: () => void }> = ({ onActivity }) => {
-  const [inputMessage, setInputMessage] = useState<string>('Vallauri 2026');
+  const [inputMessage, setInputMessage] = useState<string>('QUOTA 120M OK');
   const [packets, setPackets] = useState<Packet[]>([]);
   const [deliveredPackets, setDeliveredPackets] = useState<Packet[]>([]);
   const [isTransmitting, setIsTransmitting] = useState<boolean>(false);
@@ -75,14 +75,14 @@ export const NetworkLab: React.FC<{ onActivity: () => void }> = ({ onActivity })
         <div>
           <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-purple-400 mb-1">
             <Network className="w-4 h-4 text-purple-400" />
-            <span>Esperimento 4 · Reti di Calcolatori &amp; Protocollo TCP/IP</span>
+            <span>Prova 04 · Collegamento radio</span>
           </div>
           <h3 className="text-2xl font-bold text-white tracking-tight">
-            Come Viaggia una Foto o un Messaggio su Internet
+            Il drone chiama la base
           </h3>
           <p className="text-sm text-slate-300 max-w-2xl leading-relaxed mt-1">
-            Internet non invia file interi: li spezzetta in pacchetti numerati indipendenti. 
-            Clicca su un pacchetto in volo per <b>distruggerlo (Packet Loss)</b> e osserva la magia del protocollo TCP ritrasmetterlo all'istante senza corrompere il messaggio.
+            Il messaggio non parte intero: viene fatto a pezzetti numerati che viaggiano da soli.
+            Clicca su un pezzo mentre vola per <b>distruggerlo</b>. Riuscirai a far arrivare alla base un messaggio rovinato?
           </p>
         </div>
 
@@ -94,7 +94,7 @@ export const NetworkLab: React.FC<{ onActivity: () => void }> = ({ onActivity })
             className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-purple-500 hover:bg-purple-400 text-slate-950 font-bold text-xs shadow-md transition-all disabled:opacity-40"
           >
             <Send className="w-3.5 h-3.5 fill-current" />
-            <span>Invia Messaggio</span>
+            <span>Trasmetti</span>
           </button>
         </div>
       </div>
@@ -104,7 +104,7 @@ export const NetworkLab: React.FC<{ onActivity: () => void }> = ({ onActivity })
         <div className="p-4 rounded-xl border border-slate-800 bg-slate-900/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex-1 max-w-md">
             <label htmlFor="net-msg-input" className="block text-xs font-mono text-slate-400 mb-1">
-              Messaggio da trasmettere (max 16 caratteri):
+              Messaggio del drone (max 16 caratteri):
             </label>
             <input
               id="net-msg-input"
@@ -119,11 +119,11 @@ export const NetworkLab: React.FC<{ onActivity: () => void }> = ({ onActivity })
 
           <div className="flex items-center gap-4 text-xs font-mono">
             <div>
-              <span className="text-slate-500 block">Pacchetti Persi:</span>
+              <span className="text-slate-500 block">Pezzi distrutti:</span>
               <span className="font-bold text-rose-400 tabular-nums">{droppedCount}</span>
             </div>
             <div>
-              <span className="text-slate-500 block">Ritrasmissioni TCP:</span>
+              <span className="text-slate-500 block">Rispediti:</span>
               <span className="font-bold text-amber-400 tabular-nums">{retransmitCount}</span>
             </div>
           </div>
@@ -135,15 +135,15 @@ export const NetworkLab: React.FC<{ onActivity: () => void }> = ({ onActivity })
             {/* Sender Node */}
             <div className="p-4 rounded-xl border border-slate-800 bg-slate-950 w-44 text-center shrink-0">
               <span className="text-[10px] font-mono text-slate-500 uppercase">Mittente</span>
-              <h4 className="text-sm font-bold text-white mt-0.5">Client Fossano</h4>
-              <span className="text-xs font-mono text-purple-400 block mt-1">IP: 192.168.1.42</span>
+              <h4 className="text-sm font-bold text-white mt-0.5">Drone KS-01</h4>
+              <span className="text-xs font-mono text-purple-400 block mt-1">IP: 10.0.0.42</span>
             </div>
 
             {/* In-Flight Packets Router Track */}
             <div className="flex-1 w-full p-4 rounded-xl border border-slate-800/80 bg-slate-900/60 overflow-x-auto min-h-[110px] flex items-center justify-center gap-2">
               {packets.length === 0 ? (
                 <span className="text-xs font-mono text-slate-500 italic">
-                  Premi "Invia Messaggio" per generare i pacchetti TCP
+                  Premi "Trasmetti" e prova a sabotare il segnale
                 </span>
               ) : (
                 packets.map((pkt) => {
@@ -165,7 +165,7 @@ export const NetworkLab: React.FC<{ onActivity: () => void }> = ({ onActivity })
                           ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400 opacity-60'
                           : 'bg-rose-500/20 border-rose-500 text-rose-300 animate-pulse'
                       }`}
-                      title={isTransit ? 'Clicca per distruggere il pacchetto (Simula guasto di rete)' : undefined}
+                      title={isTransit ? 'Clicca per distruggere questo pezzo' : undefined}
                     >
                       <span className="text-[9px] font-mono text-slate-400 block">Seq #{pkt.seq}</span>
                       <span className="text-base font-mono font-black block">'{pkt.char}'</span>
@@ -179,15 +179,15 @@ export const NetworkLab: React.FC<{ onActivity: () => void }> = ({ onActivity })
             {/* Receiver Node */}
             <div className="p-4 rounded-xl border border-slate-800 bg-slate-950 w-44 text-center shrink-0">
               <span className="text-[10px] font-mono text-slate-500 uppercase">Destinatario</span>
-              <h4 className="text-sm font-bold text-white mt-0.5">Server Tokyo</h4>
-              <span className="text-xs font-mono text-emerald-400 block mt-1">IP: 142.250.180.3</span>
+              <h4 className="text-sm font-bold text-white mt-0.5">Base Vallauri</h4>
+              <span className="text-xs font-mono text-emerald-400 block mt-1">IP: 10.0.0.1</span>
             </div>
           </div>
 
           {/* Reassembled Stream at Destination */}
           <div className="p-4 rounded-xl border border-slate-800 bg-slate-950 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs font-mono">
             <div>
-              <span className="text-slate-400 block">Messaggio Riassemblato dal Buffer TCP:</span>
+              <span className="text-slate-400 block">Messaggio ricevuto dalla base:</span>
               <span className="text-xl font-bold text-emerald-400 tracking-wider">
                 {reassembledText || 'In attesa pacchetti...'}
               </span>

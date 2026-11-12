@@ -3,6 +3,17 @@ import { GridCoord, runAStar } from '../../utils/pathfinding';
 import { sound } from '../../utils/sound';
 import { Navigation, Play, RotateCcw, Compass, MapPin, Sparkles } from 'lucide-react';
 
+// Quadricottero visto dall'alto: si legge anche a 20px.
+const MiniDrone = () => (
+  <svg viewBox="0 0 20 20" className="w-full h-full" aria-hidden="true">
+    <path d="M5 5L15 15M15 5L5 15" stroke="currentColor" strokeWidth="2" />
+    {[5, 15].flatMap((x) => [5, 15].map((y) => (
+      <circle key={`${x}-${y}`} cx={x} cy={y} r="3.4" fill="none" stroke="currentColor" strokeWidth="1.6" />
+    )))}
+    <rect x="7.5" y="7.5" width="5" height="5" rx="1" fill="currentColor" />
+  </svg>
+);
+
 export const PathfindingLab: React.FC<{ onActivity: () => void }> = ({ onActivity }) => {
   const ROWS = 14;
   const COLS = 24;
@@ -108,13 +119,13 @@ export const PathfindingLab: React.FC<{ onActivity: () => void }> = ({ onActivit
         <div>
           <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-emerald-400 mb-1">
             <Compass className="w-4 h-4 text-emerald-400" />
-            <span>Esperimento 3 · Algoritmi di Navigazione &amp; Teoria dei Grafi</span>
+            <span>Prova 02 · Navigazione autonoma</span>
           </div>
           <h3 className="text-2xl font-bold text-white tracking-tight">
-            Come Pensa Google Maps: Algoritmo A* (A-Star)
+            Dalla base alla piazzola, senza sbattere
           </h3>
           <p className="text-sm text-slate-300 max-w-2xl leading-relaxed mt-1">
-            Disegna muri e ostacoli sulla mappa cliccando sulle caselle. Poi avvia l'algoritmo per osservare il fronte d'onda di scansione euristica calcolare istantaneamente la rotta minima garantita.
+            Clicca sulle caselle per costruire palazzi e zone vietate. Poi lancia il drone: guarda come esplora la città e trova da solo la rotta più corta. Prova a chiudergli la strada.
           </p>
         </div>
 
@@ -126,14 +137,14 @@ export const PathfindingLab: React.FC<{ onActivity: () => void }> = ({ onActivit
             className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs shadow-md transition-all disabled:opacity-40"
           >
             <Play className="w-3.5 h-3.5 fill-current" />
-            <span>Calcola Rotta A*</span>
+            <span>Lancia il drone</span>
           </button>
 
           <button
             onClick={generateRandomMaze}
             className="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-xs font-mono text-slate-300"
           >
-            Labirinto Casuale
+            Città casuale
           </button>
 
           <button
@@ -153,19 +164,19 @@ export const PathfindingLab: React.FC<{ onActivity: () => void }> = ({ onActivit
           <div className="w-full flex items-center justify-between px-4 py-2 bg-slate-900 border border-slate-800 rounded-t-xl text-xs font-mono">
             <div className="flex items-center gap-4">
               <span className="flex items-center gap-1.5 text-emerald-400">
-                <span className="w-3 h-3 rounded bg-emerald-500 flex items-center justify-center text-[8px] text-black font-bold">S</span>
-                <span>Partenza (Rover)</span>
+                <span className="w-3.5 h-3.5 text-emerald-400"><MiniDrone /></span>
+                <span>Drone</span>
               </span>
               <span className="flex items-center gap-1.5 text-rose-400">
-                <span className="w-3 h-3 rounded bg-rose-500 flex items-center justify-center text-[8px] text-white font-bold">G</span>
-                <span>Destinazione</span>
+                <span className="w-3 h-3 rounded bg-rose-500 flex items-center justify-center text-[8px] text-white font-bold">H</span>
+                <span>Piazzola</span>
               </span>
             </div>
 
             {metrics && (
               <div className="flex items-center gap-4 text-slate-300">
-                <span>Nodi esplorati: <b className="text-amber-400 tabular-nums">{metrics.visitedCount}</b></span>
-                <span>Passi rotta: <b className="text-emerald-400 tabular-nums">{metrics.pathLength}</b></span>
+                <span>Caselle esplorate: <b className="text-amber-400 tabular-nums">{metrics.visitedCount}</b></span>
+                <span>Lunghezza rotta: <b className="text-emerald-400 tabular-nums">{metrics.pathLength}</b></span>
               </div>
             )}
           </div>
@@ -184,7 +195,7 @@ export const PathfindingLab: React.FC<{ onActivity: () => void }> = ({ onActivit
 
                   let cellClass = 'bg-slate-900/60 hover:bg-slate-800';
                   if (isWall) cellClass = 'bg-slate-700 shadow-inner';
-                  else if (isStart) cellClass = 'bg-emerald-500 text-slate-950 font-black';
+                  else if (isStart) cellClass = 'bg-emerald-500/20 text-emerald-400 ring-1 ring-emerald-400';
                   else if (isEnd) cellClass = 'bg-rose-500 text-white font-black animate-pulse';
                   else if (isPath) cellClass = 'bg-amber-400 shadow-md shadow-amber-400/30 scale-[1.03]';
                   else if (isVisited) cellClass = 'bg-sky-950/70 border border-sky-800/40 text-sky-400';
@@ -197,7 +208,7 @@ export const PathfindingLab: React.FC<{ onActivity: () => void }> = ({ onActivit
                       className={`aspect-square rounded-[3px] transition-all duration-75 flex items-center justify-center text-[10px] ${cellClass}`}
                       aria-label={`Cella ${r},${c}`}
                     >
-                      {isStart ? 'S' : isEnd ? 'G' : ''}
+                      {isStart ? <MiniDrone /> : isEnd ? 'H' : ''}
                     </button>
                   );
                 })
@@ -205,7 +216,7 @@ export const PathfindingLab: React.FC<{ onActivity: () => void }> = ({ onActivit
             </div>
           </div>
           <span className="text-[11px] text-slate-500 mt-2 block text-center">
-            Clicca sulle celle per aggiungere o rimuovere ostacoli in tempo reale.
+            Clicca sulle caselle per costruire o demolire palazzi.
           </span>
         </div>
 
@@ -213,7 +224,7 @@ export const PathfindingLab: React.FC<{ onActivity: () => void }> = ({ onActivit
         <div className="lg:col-span-4 rounded-xl border border-slate-800 bg-slate-900/90 p-5 space-y-4">
           <div className="border-b border-slate-800 pb-3">
             <span className="text-xs font-mono text-emerald-400 font-bold block mb-1">
-              TEORIA DEGLI ALGORITMI
+              COME RAGIONA IL DRONE
             </span>
             <h4 className="text-sm font-bold text-white">Funzione di Costo Euristico: f(n) = g(n) + h(n)</h4>
           </div>
@@ -231,7 +242,7 @@ export const PathfindingLab: React.FC<{ onActivity: () => void }> = ({ onActivit
           </div>
 
           <p className="text-[11px] text-slate-400 leading-relaxed">
-            Senza euristica, un computer esplorerebbe in cerchio alla cieca (Dijkstra puro). Con l'algoritmo A*, l'esplorazione punta con precisione laser verso il traguardo, riducendo le operazioni di calcolo del 95%.
+            Senza la stima h il drone esplorerebbe in cerchio, alla cieca. Con h punta dritto verso la piazzola e fa una frazione dei calcoli. Eppure la rotta che trova è sempre la più corta possibile.
           </p>
         </div>
       </div>

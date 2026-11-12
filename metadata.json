@@ -1,6 +1,6 @@
 {
-  "name": "10 Minuti di Informatica · Vallauri",
-  "description": "Esperienza interattiva per scoprire cosa c'è dietro il codice: giochi, bit, fisica computazionale, AI, crittografia e cloud con ispezione del codice in tempo reale.",
+  "name": "Missione Drone KS-01 · Vallauri",
+  "description": "Un drone che non sa fare niente. Sei prove per insegnargli tutto. Open Day Vallauri, Fossano.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

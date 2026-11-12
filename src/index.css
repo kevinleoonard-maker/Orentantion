@@ -1,60 +1,222 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
-
+/* Token presi dal sito di Kevin Saccato (KevinDronePhotography, app/globals.css): bianco, inchiostro #111, Geist. */
 @theme {
-  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-sans: 'Geist', 'Helvetica Neue', system-ui, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, monospace;
+  --color-ink: #111111;
+  --color-muted: #6b6b6b;
+  --color-muted-soft: #555555;
+  --color-faint: #8a8a8a;
+  --color-surface: #f3f3f2;
+  --color-surface-nav: #f1f1f0;
+  --color-surface-2: #f6f6f5;
+  --color-line: #e6e6e4;
+  --color-line-btn: #e4e4e2;
+  --color-pad: #ff6b1a;
+  --color-go: #1fa971;
+}
+
+/* stessi token come variabili semplici: li leggono i CSS Modules della strumentazione di volo */
+:root {
+  --bg: #ffffff;
+  --ink: #111111;
+  --muted: #6b6b6b;
+  --muted-soft: #555555;
+  --surface: #f3f3f2;
+  --surface-2: #f6f6f5;
+  --line: #e6e6e4;
+  --line-btn: #e4e4e2;
+  --green: #1fa971;
+  --rec: #e5484d;
+  --nav-bg: rgba(255, 255, 255, 0.88);
+  --shadow-tag: 0 8px 24px -12px rgba(17, 17, 17, 0.25);
+  --shadow-screen: 0 40px 80px -36px rgba(17, 17, 17, 0.55);
+  --font-sans: 'Geist', 'Helvetica Neue', system-ui, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, monospace;
+  --tracking-tight: -0.045em;
+  --tracking-snug: -0.025em;
+  --tracking-mono: 0.08em;
+  --tracking-mono-sm: 0.06em;
+  --radius-pill: 999px;
+  --gutter: clamp(20px, 5vw, 72px);
+  --nav-h: 72px;
+  --screen: calc(100svh - var(--nav-h));
+  /* corsia libera del drone su desktop, dal bordo dello schermo */
+  --lane: clamp(280px, 24vw, 380px);
+  --z-drone: 15;
+  --z-nav: 20;
 }
 
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
   font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-code, kbd, pre, samp {
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: #ff6b1a;
+  color: #111111;
+}
+
+/* Componenti nel layer di Tailwind: le utility (hidden, normal-case, !py-…) li possono sovrascrivere */
+@layer components {
+  /* Bottoni a pillola del sito del drone */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 28px;
+    border-radius: var(--radius-pill);
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.4;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+  }
+  .btn-primary {
+    background: var(--ink);
+    color: var(--bg);
+  }
+  .btn-primary:hover {
+    background: var(--muted-soft);
+  }
+  .btn-secondary {
+    border: 1px solid var(--line-btn);
+    color: var(--ink);
+    background: var(--bg);
+  }
+  .btn-secondary:hover {
+    border-color: var(--ink);
+  }
+
+  /* Etichette tecniche in mono maiuscolo */
+  .label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: var(--tracking-mono);
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+
+
+  @media (max-width: 760px) {
+    .btn {
+      padding: 13px 18px;
+      font-size: 16px;
+      gap: 10px;
+    }
+  }
+}
+
+/* Drone trascinabile: il cursore cambia sopra il drone e mentre lo si sposta (lib/drone-scene.js) */
+html.drone-grab,
+html.drone-grab * {
+  cursor: grab !important;
+}
+html.drone-grabbing,
+html.drone-grabbing * {
+  cursor: grabbing !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+}
+
+/* Le prove sono schermi scuri della stazione di terra, appoggiati sulla pagina bianca.
+   Fuori dai layer apposta: deve vincere su rounded-2xl e shadow-2xl dei laboratori. */
+.lab > div {
+  border-radius: 28px;
+  box-shadow: var(--shadow-screen);
+}
+
+/* Righe della rotta: contenuto + corsia libera del drone. La corsia c'è solo su desktop con il mouse. */
+.route-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  padding-inline: var(--gutter);
+}
+.lane,
+.transit {
+  display: none;
+}
+
+@media (min-width: 1100px) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .route-row[data-side='right'] {
+    grid-template-columns: minmax(0, 1fr) var(--lane);
+    padding-right: 0;
+  }
+  .route-row[data-side='left'] {
+    grid-template-columns: var(--lane) minmax(0, 1fr);
+    padding-left: 0;
+  }
+  .route-row[data-side='left'] > .lane {
+    order: -1;
+  }
+  .lane {
+    display: block;
+    position: relative;
+  }
+  .route-row > :not(.lane) {
+    min-width: 0;
+  }
+  .route-row[data-side='right'] > :not(.lane) {
+    padding-right: 40px;
+  }
+  .route-row[data-side='left'] > :not(.lane) {
+    padding-left: 40px;
+  }
+
+  /* striscia di traversata fra due prove: griglia di punti come una carta di volo, sfumata in alto e in basso */
+  .transit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 58vh;
+    background-image: radial-gradient(circle, var(--line-btn) 1.2px, transparent 1.6px);
+    background-size: 28px 28px;
+    background-position: center;
+    mask-image: linear-gradient(to bottom, transparent, #111 22%, #111 78%, transparent);
+  }
+}
+
+/* Waypoint del piano di volo (components/FlightPath.tsx) */
+.wp {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  border: 2px solid var(--line-btn);
+  border-radius: var(--radius-pill);
+  background: var(--bg);
+}
+.wp > span {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
   font-family: var(--font-mono);
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-track {
-  background: #090d16;
-}
-::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #334155;
-}
-
-@keyframes marquee {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-50%); }
-}
-
-@keyframes marquee-rev {
-  0% { transform: translateX(-50%); }
-  100% { transform: translateX(0%); }
-}
-
-.animate-marquee {
-  animation: marquee 28s linear infinite;
-}
-
-.animate-marquee-rev {
-  animation: marquee-rev 28s linear infinite;
-}
-
-@keyframes pulse-subtle {
-  0%, 100% { opacity: 0.25; }
-  50% { opacity: 0.45; }
-}
-
-.animate-pulse-subtle {
-  animation: pulse-subtle 4s ease-in-out infinite;
+  font-size: 11px;
+  letter-spacing: var(--tracking-mono);
+  color: var(--muted);
+  white-space: nowrap;
 }
