@@ -193,7 +193,8 @@ export default function App() {
             <p className="font-semibold text-white text-base tracking-[-0.025em]">Missione KS-01</p>
             <p>Open Day · Istituto Vallauri · Fossano (CN)</p>
             <p className="mt-2">
-              Crediti: <span className="text-white">Kevin Saccato</span> ·{' '}
+              Crediti: <span className="text-white">4C Informatica</span> ·{' '}
+              <span className="text-white">Kevin Saccato</span> ·{' '}
               <span className="text-white">Emanuel Andru</span>
             </p>
           </div>
@@ -208,6 +209,15 @@ export default function App() {
               aria-label="Kevin Saccato"
               className="w-72 h-auto mix-blend-screen contrast-125"
             />
+            {/* il nome di Kevin è un video animato; quello di Emanuel è testo con un riflesso cromato simile */}
+            <p className="-mt-1 flex items-baseline gap-2.5 font-bold uppercase leading-none tracking-[0.04em]">
+              <span className="font-mono text-[12px] font-medium text-white/50" aria-hidden="true">
+                &amp;
+              </span>
+              <span className="bg-linear-to-b from-white via-[#d5dae3] to-[#7b8493] bg-clip-text text-[26px] text-transparent">
+                Emanuel Andru
+              </span>
+            </p>
           </div>
           <div className="text-sm text-white/60 md:text-right">
             <p>Lo stesso drone del sito di Kevin Saccato · three.js</p>
