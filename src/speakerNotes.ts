@@ -25,10 +25,10 @@ export const NOTES: Record<MissionId, SpeakerNote> = {
     ragazzi: [
       'Guardano i droni cadere e migliorare. In alto c\'è il numero della generazione.',
       'Possono pilotare loro: premono «Pilota tu contro i droni» e saltano con la barra spaziale o la freccia in su.',
-      'Possono cambiare la velocità, mettere in pausa o ricominciare con droni nuovi (il pulsante con la freccia che gira).',
+      'Possono cambiare la velocità (1x lenta, 2x media, 5x veloce: parte lenta apposta, per vedere bene cosa fanno i droni), mettere in pausa o ricominciare con droni nuovi (il pulsante con la freccia che gira).',
     ],
     azioni:
-      'Ogni nuova generazione conta: parte da sola quando tutti i droni sono caduti, quindi basta aspettare. Contano anche i salti di chi pilota e il pulsante per ricominciare.',
+      'Ogni nuova generazione conta: parte da sola quando tutti i droni sono caduti, quindi basta aspettare (con 5x ci vuole meno). Contano anche i salti di chi pilota e il pulsante per ricominciare.',
     daDire:
       'Nessuno ha insegnato ai droni a volare: imparano da soli, come fa l\'evoluzione con gli animali. È un esempio di Intelligenza Artificiale, la stessa famiglia di ChatGPT e delle auto che si guidano da sole.',
     codice: [
@@ -151,7 +151,7 @@ export const FINALE = {
   cosaFa:
     'L\'ultima schermata: «Ok, ti dobbiamo una confessione». Elenca le sei prove con il loro nome vero. Il drone atterra sulla seconda piazzola, in fondo alla pagina.',
   ragazzi: [
-    'Se hanno decifrato le prove, vedono i nomi veri e dove si usano nella vita di tutti i giorni.',
+    'Ogni riga è un passaggio da completare: all\'inizio dice «Passaggio da completare» e porta alla prova con «Vai alla prova»; quando la prova è completata diventa arancione («Prova completata»); dopo «Decifra» mostra il nome vero e dove si usa nella vita di tutti i giorni.',
     'Se manca tempo, il pulsante «Rivela tutto» decifra le sei prove in un colpo solo.',
     'Quando tutte le prove sono decifrate compare la parola «Informatica.» in grande.',
     'In fondo c\'è il patentino di volo: scrivono il loro nome e possono copiarlo con «Copia il patentino». «Nuovo pilota» fa ricominciare da capo.',
@@ -164,7 +164,7 @@ export const FINALE = {
 export const COME_FUNZIONA = [
   'Il sito è una rotta in sei tappe. Ogni tappa è un gioco che fa provare ai ragazzi una tecnologia vera.',
   'Ogni prova si spiega con una riga di testo: i ragazzi provano e basta. Dopo qualche azione compare il pulsante «Decifra».',
-  '«Decifra» mostra cosa hanno appena fatto, dove si usa nella vita reale e il codice che c\'è dietro, in poche righe.',
+  'Quando una prova è completata compare un avviso in alto, il pulsante «Decifra» diventa arancione e pulsa, e il menu mette un puntino arancione. «Decifra» mostra cosa hanno appena fatto, dove si usa nella vita reale e il codice che c\'è dietro, in poche righe.',
   'Per vedere il drone seguire la pagina serve uno schermo largo (almeno 1100 px) con il mouse. Gli effetti sonori si spengono dall\'icona in alto a destra.',
   'Se il tempo stringe, nel finale c\'è «Rivela tutto».',
   'Demo automatica: il pulsante «Demo» in alto (o «Avvia la demo» qui sopra) fa vedere il sito da solo. La pagina scorre e un cursore immaginario prova ogni gioco, con una didascalia che dice cosa succede. Dura al massimo 5 minuti, di solito meno. Si ferma con «Stop», con Esc o appena usi la rotellina, la tastiera o un clic.',

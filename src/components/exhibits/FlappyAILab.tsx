@@ -17,6 +17,14 @@ interface Pipe {
   passed: boolean;
 }
 
+// Passi di simulazione al secondo con velocità 1x (2x e 5x li moltiplicano). Prima era un passo per fotogramma,
+// cioè 60 al secondo e anche di più su schermi veloci: troppo rapido per capire cosa fanno i droni.
+// Ora 1x è lenta, 2x il doppio, 5x più di due volte e mezza: così tutta la fase di apprendimento si segue meglio.
+const STEPS_PER_SECOND = 24;
+// Se la pagina resta indietro (computer lento) non si recupera tutto insieme: si salta il ritardo.
+const MAX_STEPS_PER_FRAME = 12;
+const SPEED_LABEL = { 1: 'Lenta', 2: 'Media', 5: 'Veloce' } as const;
+
 export const FlappyAILab: React.FC<{ onActivity: () => void }> = ({ onActivity }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -111,14 +119,25 @@ export const FlappyAILab: React.FC<{ onActivity: () => void }> = ({ onActivity }
   useEffect(() => {
     resetPipes();
     let animId: number;
+    let lastTime = performance.now();
+    let owed = 0; // passi di simulazione ancora da fare (la parte con la virgola)
 
     const gameLoop = () => {
+      const now = performance.now();
+      const elapsed = Math.min(0.1, (now - lastTime) / 1000);
+      lastTime = now;
       if (!onScreenRef.current) {
         animId = requestAnimationFrame(gameLoop);
         return;
       }
       if (!isPaused) {
-        for (let step = 0; step < speedMultiplier; step++) {
+        // I passi seguono il tempo vero e non i fotogrammi dello schermo: prima ce n'era uno a fotogramma e su
+        // schermi a 120-144 Hz i droni andavano il doppio più veloci. Le regole di ogni passo non cambiano.
+        owed += elapsed * STEPS_PER_SECOND * speedMultiplier;
+        const whole = Math.floor(owed);
+        const steps = Math.min(whole, MAX_STEPS_PER_FRAME);
+        owed -= whole; // se il computer è lento si perde il ritardo, non si accumula
+        for (let step = 0; step < steps; step++) {
           frameCountRef.current++;
 
           // Move pipes
@@ -410,6 +429,7 @@ export const FlappyAILab: React.FC<{ onActivity: () => void }> = ({ onActivity }
             {([1, 2, 5] as const).map((spd) => (
               <button
                 key={spd}
+                title={`Velocità ${SPEED_LABEL[spd].toLowerCase()}`}
                 onClick={() => setSpeedMultiplier(spd)}
                 className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold transition-all ${
                   speedMultiplier === spd

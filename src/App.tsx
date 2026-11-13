@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { TopBar } from './components/TopBar';
 import { DemoRunner } from './demo/DemoRunner';
+import { UnlockToast } from './components/UnlockToast';
 import { HeroSection } from './components/HeroSection';
 import { FlappyAILab } from './components/exhibits/FlappyAILab';
 import { CPULab } from './components/exhibits/CPULab';
@@ -57,6 +58,25 @@ export default function App() {
     setCounts(zero());
     setRevealed(none());
   }, []);
+
+  // Prova completata (raggiunte le azioni) ma non ancora decifrata: il menu la segna e compare un avviso.
+  const ready = useMemo(
+    () => Object.fromEntries(MISSIONS.map((m) => [m.id, counts[m.id] >= m.threshold && !revealed[m.id]])) as Record<MissionId, boolean>,
+    [counts, revealed],
+  );
+  const [toast, setToast] = useState<Mission | null>(null);
+  const closeToast = useCallback(() => setToast(null), []);
+  const prevCounts = useRef(counts);
+  useEffect(() => {
+    const before = prevCounts.current;
+    prevCounts.current = counts;
+    if (demo) {
+      setToast(null); // durante la demo ci pensa il riquadro in basso
+      return;
+    }
+    const justDone = MISSIONS.find((m) => before[m.id] < m.threshold && counts[m.id] >= m.threshold && !revealed[m.id]);
+    if (justDone) setToast(justDone);
+  }, [counts, revealed, demo]);
 
   useEffect(() => {
     const q = new URLSearchParams(window.location.search);
@@ -135,9 +155,11 @@ export default function App() {
         onToggleSound={handleToggleSound}
         progressPercent={progressPercent}
         revealed={revealed}
+        ready={ready}
         demoActive={demo}
         onToggleDemo={() => (demo ? stopDemo() : startDemo())}
       />
+      <UnlockToast mission={toast} onClose={closeToast} />
       <DemoRunner active={demo} speed={demoSpeed} onStop={stopDemo} onReset={resetProgress} onRestart={() => startDemo(demoSpeed)} />
 
       <main className="flex-1">

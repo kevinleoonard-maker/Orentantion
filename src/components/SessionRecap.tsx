@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Copy, Check, RotateCcw, Eye } from 'lucide-react';
+import { Copy, Check, RotateCcw, Eye, Lock, Unlock, ArrowRight } from 'lucide-react';
 import { MISSIONS, type MissionId } from '../missions';
 import { ScrambleText } from './MissionReveal';
 import { sound } from '../utils/sound';
@@ -41,26 +41,84 @@ export const SessionRecap: React.FC<SessionRecapProps> = ({ counts, revealed, on
         Il drone era una scusa. In questi dieci minuti hai fatto tutt'altro, e ogni prova ha un nome vero.
       </p>
 
-      <ol className="mt-10 border-t border-line">
-        {MISSIONS.map((m) => (
-          <li
-            key={m.id}
-            className="py-5 border-b border-line grid gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] sm:items-baseline sm:gap-8"
-          >
-            <span className="flex items-baseline gap-3 text-[17px] text-muted">
-              <span className="font-mono text-[12px]">{m.n}</span>
-              {m.title}
-            </span>
-            <span>
-              <ScrambleText
-                text={m.tech}
-                active={revealed[m.id]}
-                className="text-[clamp(24px,2.4vw,34px)] font-semibold leading-tight tracking-[-0.025em]"
-              />
-              {revealed[m.id] && <span className="block mt-1 text-[14px] text-muted">{m.where}</span>}
-            </span>
-          </li>
-        ))}
+      {/* I sei passaggi: ognuno è una prova da giocare. Il nome vero compare solo dopo «Decifra». */}
+      <div className="mt-10 flex flex-wrap items-center justify-between gap-3">
+        <p className="label">
+          I tuoi passaggi · {doneCount} su {MISSIONS.length} decifrati
+        </p>
+        <div className="flex w-48 gap-1" aria-hidden="true">
+          {MISSIONS.map((m) => (
+            <span
+              key={m.id}
+              className={`h-1.5 flex-1 rounded-full ${
+                revealed[m.id] ? 'bg-go' : counts[m.id] >= m.threshold ? 'bg-pad' : 'bg-line-btn'
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+      <ol className="mt-4 border-t border-line">
+        {MISSIONS.map((m) => {
+          const ready = !revealed[m.id] && counts[m.id] >= m.threshold;
+          const left = Math.max(0, m.threshold - counts[m.id]);
+          return (
+            <li
+              key={m.id}
+              className="py-5 border-b border-line grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] sm:items-center sm:gap-8"
+            >
+              <span className="flex items-baseline gap-3 text-[17px] text-muted">
+                <span className="font-mono text-[12px]">{m.n}</span>
+                {m.title}
+              </span>
+
+              {revealed[m.id] ? (
+                <span>
+                  <ScrambleText
+                    text={m.tech}
+                    active
+                    className="text-[clamp(24px,2.4vw,34px)] font-semibold leading-tight tracking-[-0.025em]"
+                  />
+                  <span className="mt-1 flex items-center gap-1.5 text-[14px] text-muted">
+                    <Check className="h-4 w-4 shrink-0 text-go" aria-hidden="true" /> Decifrata · {m.where}
+                  </span>
+                </span>
+              ) : ready ? (
+                <a
+                  href={`#decifra-${m.id}`}
+                  className="group flex items-center justify-between gap-3 rounded-[16px] border-2 border-pad bg-pad/10 px-4 py-3 hover:bg-pad/20 transition-colors"
+                >
+                  <span>
+                    <span className="flex items-center gap-2 text-[16px] font-semibold">
+                      <Unlock className="h-4 w-4 text-pad" aria-hidden="true" /> Prova completata
+                    </span>
+                    <span className="mt-0.5 block text-[14px] leading-snug text-muted-soft">
+                      Premi «Decifra» sotto la prova per scoprire il nome e vedere il codice.
+                    </span>
+                  </span>
+                  <ArrowRight className="h-5 w-5 shrink-0 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                </a>
+              ) : (
+                <a
+                  href={`#prova-${m.id}`}
+                  className="group flex items-center justify-between gap-3 rounded-[16px] border-2 border-dashed border-line-btn px-4 py-3 hover:border-ink transition-colors"
+                >
+                  <span>
+                    <span className="flex items-center gap-2 text-[16px] font-semibold">
+                      <Lock className="h-4 w-4 text-muted" aria-hidden="true" /> Passaggio da completare
+                    </span>
+                    <span className="mt-0.5 block text-[14px] leading-snug text-muted">
+                      Gioca la prova {m.n}: ancora {left === 1 ? '1 azione' : `${left} azioni`} per scoprire come si chiama.
+                    </span>
+                  </span>
+                  <span className="flex shrink-0 items-center gap-1.5 text-[14px] font-semibold">
+                    Vai alla prova
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                  </span>
+                </a>
+              )}
+            </li>
+          );
+        })}
       </ol>
 
       {!allRevealed ? (

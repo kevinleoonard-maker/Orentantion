@@ -305,3 +305,42 @@ html.drone-grabbing * {
     opacity: 0.8;
   }
 }
+
+/* Prova completata: il pulsante «Decifra» pulsa con un alone arancione, per non farsi scappare che si è sbloccato */
+.decifra-cta {
+  animation: decifra-pulse 2.2s ease-out infinite;
+}
+@keyframes decifra-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 107, 26, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 18px rgba(255, 107, 26, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 107, 26, 0);
+  }
+}
+/* Avviso «prova completata»: scende da sotto la barra */
+.unlock-toast {
+  animation: unlock-toast-in 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.1) both;
+}
+@keyframes unlock-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(-14px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .decifra-cta {
+    animation: none;
+    box-shadow: 0 0 0 4px rgba(255, 107, 26, 0.35);
+  }
+  .unlock-toast {
+    animation: none;
+  }
+}

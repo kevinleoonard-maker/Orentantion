@@ -9,6 +9,8 @@ interface TopBarProps {
   onToggleSound: () => void;
   progressPercent: number;
   revealed: Record<MissionId, boolean>;
+  /** prova completata ma non ancora decifrata: nel menu ha un puntino arancione */
+  ready: Record<MissionId, boolean>;
   demoActive: boolean;
   onToggleDemo: () => void;
 }
@@ -29,12 +31,13 @@ export const TopBar: React.FC<TopBarProps> = ({
   onToggleSound,
   progressPercent,
   revealed,
+  ready,
   demoActive,
   onToggleDemo,
 }) => {
   const items = [
-    ...MISSIONS.map((m) => ({ id: `prova-${m.id}`, n: m.n, label: SHORT[m.id], done: revealed[m.id] })),
-    { id: 'debriefing', n: '', label: 'Verità', done: false },
+    ...MISSIONS.map((m) => ({ id: `prova-${m.id}`, n: m.n, label: SHORT[m.id], done: revealed[m.id], ready: ready[m.id] })),
+    { id: 'debriefing', n: '', label: 'Verità', done: false, ready: false },
   ];
 
   return (
@@ -59,6 +62,9 @@ export const TopBar: React.FC<TopBarProps> = ({
                 {it.n && <span className="font-mono text-[12px] text-muted">{it.n}</span>}
                 <span className={it.n ? 'hidden xl:inline' : ''}>{it.label}</span>
                 {it.done && <span className="w-1.5 h-1.5 rounded-full bg-go" aria-label="decifrata" />}
+                {!it.done && it.ready && (
+                  <span className="w-2 h-2 rounded-full bg-pad animate-pulse" aria-label="completata, da decifrare" />
+                )}
               </a>
             );
           })}
