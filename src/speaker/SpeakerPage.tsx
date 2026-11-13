@@ -7,7 +7,8 @@ import { ThemeToggle } from '../components/ThemeToggle';
 
 // Pagina per chi presenta (speaker.html, indirizzo /speaker). Una scheda per ogni schermata del sito: cosa fa, cosa
 // fanno i ragazzi, cosa dire, il codice. In alto a destra di ogni scheda c'è com'è la schermata sul sito
-// (public/speaker/*.jpg: sono foto scattate, se cambi l'aspetto del sito vanno rifatte).
+// (public/speaker/<nome>.jpg per il tema chiaro e <nome>-dark.jpg per lo scuro: sono foto scattate, se cambi
+// l'aspetto del sito vanno rifatte).
 // Tutto quello che esiste già (titoli, tecnologia, codice, azioni per Decifra) arriva da missions.ts.
 
 const Label: React.FC<{ children: React.ReactNode }> = ({ children }) => <p className="label">{children}</p>;
@@ -57,14 +58,27 @@ const Card: React.FC<CardProps> = ({ id, kicker, title, tag, dot, img, siteHref,
     </header>
 
     <figure className="md:col-start-2 md:row-start-1 md:row-span-2 self-start">
-      <a href={img} target="_blank" rel="noreferrer" aria-label={`Ingrandisci com'è la sezione «${title}» sul sito`}>
-        <img
-          src={img}
-          alt={`Come appare sul sito la sezione «${title}»`}
-          loading="lazy"
-          className="w-full h-auto rounded-[14px] border border-line-btn bg-paper"
-        />
-      </a>
+      {/* una miniatura per tema (data-thumb): si vede quella del tema attivo, le regole sono in index.css */}
+      {(['dark', 'light'] as const).map((theme) => {
+        const src = theme === 'dark' ? img.replace(/\.jpg$/, '-dark.jpg') : img;
+        return (
+          <a
+            key={theme}
+            data-thumb={theme}
+            href={src}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={`Ingrandisci com'è la sezione «${title}» sul sito`}
+          >
+            <img
+              src={src}
+              alt={`Come appare sul sito la sezione «${title}»`}
+              loading="lazy"
+              className="w-full h-auto rounded-[14px] border border-line-btn bg-paper"
+            />
+          </a>
+        );
+      })}
       <figcaption className="mt-2 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-[12.5px] text-muted">
         <span>Come appare sul sito · clic per ingrandire</span>
         <a href={siteHref} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-ink hover:underline">

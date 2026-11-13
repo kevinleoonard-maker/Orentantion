@@ -349,3 +349,17 @@ html.drone-grabbing * {
     animation: none;
   }
 }
+
+/* Pagina speaker: ogni miniatura esiste in tema scuro e chiaro (data-thumb), si vede quella del tema attivo */
+[data-thumb] {
+  display: block;
+}
+[data-thumb='light'] {
+  display: none;
+}
+:root[data-theme='light'] [data-thumb='light'] {
+  display: block;
+}
+:root[data-theme='light'] [data-thumb='dark'] {
+  display: none;
+}
