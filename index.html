@@ -3,15 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#0d0d0f" />
     <script>
-      // Tema chiaro/scuro scelto prima del primo disegno (src/theme.ts), così non c'è il lampo bianco.
+      // Il sito parte con il tema scuro (src/theme.ts). Chi sceglie il chiaro con il pulsante sole/luna se lo ritrova
+      // salvato. L'attributo si imposta prima del primo disegno, così non c'è nessun lampo.
       (function () {
         var t = null;
         try { t = localStorage.getItem('ks01-theme'); } catch (e) {}
-        if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        if (t !== 'light') t = 'dark';
         document.documentElement.setAttribute('data-theme', t);
-        if (t === 'dark') document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0f');
+        if (t === 'light') document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff');
       })();
     </script>
     <title>Missione Drone KS-01 · Vallauri</title>

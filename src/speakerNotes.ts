@@ -168,5 +168,5 @@ export const COME_FUNZIONA = [
   'Per vedere il drone seguire la pagina serve uno schermo largo (almeno 1100 px) con il mouse. Gli effetti sonori si spengono dall\'icona in alto a destra.',
   'Se il tempo stringe, nel finale c\'è «Rivela tutto».',
   'Demo automatica: il pulsante «Demo» in alto (o «Avvia la demo» qui sopra) fa vedere il sito da solo. La pagina scorre e un cursore immaginario prova ogni gioco, con una didascalia che dice cosa succede. Dura al massimo 5 minuti, di solito meno. Si ferma con «Stop», con Esc o appena usi la rotellina, la tastiera o un clic.',
-  'Tema chiaro o scuro: il pulsante con sole e luna in alto. La scelta resta salvata nel browser.',
+  'Il sito parte con il tema scuro. Il pulsante con sole e luna in alto passa al tema chiaro (e viceversa): la scelta resta salvata nel browser.',
 ];
