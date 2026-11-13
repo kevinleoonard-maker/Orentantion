@@ -250,16 +250,8 @@ export default function App() {
           </div>
           <div className="flex flex-col items-center">
             <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/50">Drone e scena 3D di</span>
-            <video
-              src="/ks-01/kevin-saccato.mp4"
-              autoPlay
-              muted
-              loop
-              playsInline
-              aria-label="Kevin Saccato"
-              className="w-72 h-auto mix-blend-screen contrast-125"
-            />
-            {/* il nome di Kevin è un video animato; quello di Emanuel è testo con un riflesso cromato simile */}
+            <span className="bg-linear-to-b from-white via-[#d5dae3] to-[#7b8493] bg-clip-text text-[26px] text-transparent">
+                Saccato Kevin
             <p className="-mt-1 flex items-baseline gap-2.5 font-bold uppercase leading-none tracking-[0.04em]">
               <span className="font-mono text-[12px] font-medium text-white/50" aria-hidden="true">
                 &amp;
