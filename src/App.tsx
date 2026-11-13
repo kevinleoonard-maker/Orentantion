@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { TopBar } from './components/TopBar';
+import { DemoRunner } from './demo/DemoRunner';
 import { HeroSection } from './components/HeroSection';
 import { FlappyAILab } from './components/exhibits/FlappyAILab';
 import { CPULab } from './components/exhibits/CPULab';
@@ -42,6 +43,30 @@ export default function App() {
     sound.enabled = !sound.enabled;
     setSoundEnabled(sound.enabled);
   };
+
+  // Demo automatica (demo/): il sito si fa vedere da solo, al massimo in 5 minuti.
+  // Con ?demo nell'indirizzo parte da sola; ?demo=3 la fa andare 3 volte più veloce (utile per provarla).
+  const [demo, setDemo] = useState(false);
+  const [demoSpeed, setDemoSpeed] = useState(1);
+  const startDemo = useCallback((speed = 1) => {
+    setDemoSpeed(speed);
+    setDemo(true);
+  }, []);
+  const stopDemo = useCallback(() => setDemo(false), []);
+  const resetProgress = useCallback(() => {
+    setCounts(zero());
+    setRevealed(none());
+  }, []);
+
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    if (!q.has('demo')) return;
+    const n = Number(q.get('demo'));
+    const speed = Number.isFinite(n) && n >= 1 ? Math.min(n, 8) : 1;
+    // un attimo di pausa: si vede il drone che decolla prima che parta la demo
+    const t = setTimeout(() => startDemo(speed), 1800);
+    return () => clearTimeout(t);
+  }, [startDemo]);
 
   useEffect(() => {
     const ids = ['top', ...MISSIONS.map((m) => `prova-${m.id}`), 'debriefing'];
@@ -92,7 +117,7 @@ export default function App() {
 
   const transit = (to: string) => (
     <div className="transit" aria-hidden="true">
-      <span className="label bg-white px-3 py-1 rounded-full">Traversata · verso {to}</span>
+      <span className="label bg-[var(--bg)] px-3 py-1 rounded-full">Traversata · verso {to}</span>
     </div>
   );
 
@@ -100,7 +125,7 @@ export default function App() {
     <div className="min-h-screen flex flex-col">
       <a
         href="#prova-ai"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:bg-white focus:px-4 focus:py-2 focus:rounded-full"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:bg-paper focus:px-4 focus:py-2 focus:rounded-full"
       >
         Salta alla prima prova
       </a>
@@ -110,7 +135,10 @@ export default function App() {
         onToggleSound={handleToggleSound}
         progressPercent={progressPercent}
         revealed={revealed}
+        demoActive={demo}
+        onToggleDemo={() => (demo ? stopDemo() : startDemo())}
       />
+      <DemoRunner active={demo} speed={demoSpeed} onStop={stopDemo} onReset={resetProgress} onRestart={() => startDemo(demoSpeed)} />
 
       <main className="flex-1">
         <HeroSection />
@@ -187,7 +215,7 @@ export default function App() {
         </div>
       </main>
 
-      <footer className="bg-ink text-white">
+      <footer className="bg-night text-white border-t border-white/10">
         <div className="px-[var(--gutter)] py-12 grid gap-8 md:grid-cols-[1fr_auto_1fr] items-center">
           <div className="text-sm text-white/60">
             <p className="font-semibold text-white text-base tracking-[-0.025em]">Missione KS-01</p>

@@ -108,19 +108,19 @@ export const SessionRecap: React.FC<SessionRecapProps> = ({ counts, revealed, on
               value={pilotName}
               placeholder="Pilota KS-01"
               onChange={(e) => setPilotName(e.target.value)}
-              className="w-44 px-4 py-2 rounded-full bg-white border border-line-btn text-[15px] text-ink focus:outline-none focus:border-ink"
+              className="w-44 px-4 py-2 rounded-full bg-paper border border-line-btn text-[15px] text-ink focus:outline-none focus:border-ink"
             />
           </label>
         </div>
 
         <dl className="mt-6 grid grid-cols-2 gap-3 font-mono">
-          <div className="rounded-[18px] bg-white p-4">
+          <div className="rounded-[18px] bg-paper p-4">
             <dt className="label">Prove completate</dt>
             <dd className="mt-1 text-[28px] font-semibold tabular-nums">
               {doneCount}/{MISSIONS.length}
             </dd>
           </div>
-          <div className="rounded-[18px] bg-white p-4">
+          <div className="rounded-[18px] bg-paper p-4">
             <dt className="label">Comandi dati al drone</dt>
             <dd className="mt-1 text-[28px] font-semibold tabular-nums">{totalActions}</dd>
           </div>

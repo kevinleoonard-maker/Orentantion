@@ -8,7 +8,7 @@ export const CodeBlock: React.FC<{ code: string; className?: string }> = ({ code
     <pre
       tabIndex={0}
       aria-label="Codice Python semplificato"
-      className={`overflow-x-auto rounded-[16px] bg-ink p-4 sm:p-5 font-mono text-[13px] sm:text-sm leading-[1.75] text-white ${className}`}
+      className={`overflow-x-auto rounded-[16px] border border-white/10 bg-night p-4 sm:p-5 font-mono text-[13px] sm:text-sm leading-[1.75] text-white ${className}`}
     >
       <code>
         {lines.map((line, i) => {

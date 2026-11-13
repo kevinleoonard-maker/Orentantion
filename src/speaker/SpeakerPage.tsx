@@ -3,6 +3,7 @@ import { ArrowUpRight } from 'lucide-react';
 import { MISSIONS, type Mission } from '../missions';
 import { APERTURA, COME_FUNZIONA, FINALE, NOTES } from '../speakerNotes';
 import { CodeBlock } from '../components/CodePeek';
+import { ThemeToggle } from '../components/ThemeToggle';
 
 // Pagina per chi presenta (speaker.html, indirizzo /speaker). Una scheda per ogni schermata del sito: cosa fa, cosa
 // fanno i ragazzi, cosa dire, il codice. In alto a destra di ogni scheda c'è com'è la schermata sul sito
@@ -49,7 +50,7 @@ const Card: React.FC<CardProps> = ({ id, kicker, title, tag, dot, img, siteHref,
         {title}
       </h2>
       {tag && (
-        <p className="mt-3 inline-block rounded-full bg-white px-4 py-1.5 text-[14px] text-muted-soft">
+        <p className="mt-3 inline-block rounded-full bg-paper px-4 py-1.5 text-[14px] text-muted-soft">
           Tecnologia: <b className="text-ink">{tag}</b>
         </p>
       )}
@@ -61,7 +62,7 @@ const Card: React.FC<CardProps> = ({ id, kicker, title, tag, dot, img, siteHref,
           src={img}
           alt={`Come appare sul sito la sezione «${title}»`}
           loading="lazy"
-          className="w-full h-auto rounded-[14px] border border-line-btn bg-white"
+          className="w-full h-auto rounded-[14px] border border-line-btn bg-paper"
         />
       </a>
       <figcaption className="mt-2 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-[12.5px] text-muted">
@@ -151,12 +152,18 @@ export default function SpeakerPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[var(--bg)]">
       <header className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-line bg-[var(--nav-bg)] px-[var(--gutter)] py-3 backdrop-blur">
         <span className="font-semibold tracking-[-0.025em]">Missione KS-01 · Guida per chi presenta</span>
-        <a href="/" className="btn btn-secondary !py-2 !px-4 !text-[14px] shrink-0 whitespace-nowrap">
-          Apri il sito
-        </a>
+        <div className="flex shrink-0 items-center gap-2">
+          <a href="/?demo" className="btn btn-primary !py-2 !px-4 !text-[14px] whitespace-nowrap">
+            Avvia la demo
+          </a>
+          <a href="/" className="btn btn-secondary !py-2 !px-4 !text-[14px] hidden sm:inline-flex whitespace-nowrap">
+            Apri il sito
+          </a>
+          <ThemeToggle />
+        </div>
       </header>
 
       <main className="mx-auto max-w-[1100px] px-[var(--gutter)] py-[clamp(32px,6vh,64px)]">

@@ -98,7 +98,7 @@ export const MissionReveal: React.FC<MissionRevealProps> = ({ mission, count, re
         sound.playSuccess();
         onReveal();
       }}
-      className="mt-8 w-full rounded-[24px] bg-ink text-white p-5 sm:px-7 flex flex-wrap items-center justify-between gap-3 text-left hover:bg-muted-soft transition-colors"
+      className="mt-8 w-full rounded-[24px] bg-ink text-[var(--bg)] p-5 sm:px-7 flex flex-wrap items-center justify-between gap-3 text-left hover:bg-muted-soft transition-colors"
     >
       <span className="flex items-center gap-3 text-[17px] font-semibold">
         <Unlock className="w-5 h-5 text-pad" /> Decifra: cosa hai appena fatto davvero?
