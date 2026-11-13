@@ -2,6 +2,7 @@ import React from 'react';
 import { Volume2, VolumeX, ArrowRight, Play, Square } from 'lucide-react';
 import { MISSIONS, type MissionId } from '../missions';
 import { ThemeToggle } from './ThemeToggle';
+import { PresentationTimer } from './PresentationTimer';
 
 interface TopBarProps {
   active: string;
@@ -44,7 +45,7 @@ export const TopBar: React.FC<TopBarProps> = ({
     <header className="sticky top-0 z-[20] h-[var(--nav-h)] bg-[var(--nav-bg)] backdrop-blur-md border-b border-line">
       <div className="h-full px-[var(--gutter)] flex items-center justify-between gap-4">
         <a href="#top" className="text-[19px] font-semibold tracking-[-0.025em] whitespace-nowrap">
-          Missione KS-01
+          <span className="hidden sm:inline">Missione </span>KS-01
         </a>
 
         <nav aria-label="Prove" className="hidden md:flex items-center gap-0.5 p-1 rounded-full bg-surface-nav">
@@ -71,6 +72,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         </nav>
 
         <div className="flex items-center gap-2 shrink-0">
+          <PresentationTimer />
           {/* data-demo-control: la demo non si ferma da sola quando si preme questo pulsante, ci pensa il suo clic */}
           <button
             type="button"
@@ -97,7 +99,7 @@ export const TopBar: React.FC<TopBarProps> = ({
           >
             {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4 text-muted" />}
           </button>
-          <a href="#prova-ai" className="btn btn-primary !py-2.5 !px-5 !text-[15px] hidden sm:inline-flex">
+          <a href="#prova-ai" className="btn btn-primary !py-2.5 !px-5 !text-[15px] hidden min-[1500px]:inline-flex">
             Accendi i motori <ArrowRight className="w-4 h-4" />
           </a>
         </div>

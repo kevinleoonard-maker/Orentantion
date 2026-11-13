@@ -33,6 +33,9 @@
   --line-btn: #e4e4e2;
   --green: #1fa971;
   --rec: #e5484d;
+  /* timer di 10 minuti: avviso (meno di 2 minuti) e allarme (meno di 1 minuto) */
+  --warn: #b45309;
+  --alert: #c7282d;
   --nav-bg: rgba(255, 255, 255, 0.88);
   --shadow-tag: 0 8px 24px -12px rgba(17, 17, 17, 0.25);
   --shadow-screen: 0 40px 80px -36px rgba(17, 17, 17, 0.55);
@@ -65,6 +68,8 @@
   --line: #2a2a2e;
   --line-btn: #36363b;
   --nav-bg: rgba(13, 13, 15, 0.88);
+  --warn: #fbbf24;
+  --alert: #ff6b70;
   --shadow-tag: 0 8px 24px -12px rgba(0, 0, 0, 0.7);
   --shadow-screen: 0 40px 80px -36px rgba(0, 0, 0, 0.9);
 
